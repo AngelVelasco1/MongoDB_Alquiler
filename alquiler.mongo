@@ -1,0 +1,88 @@
+use("db_campus_alquiler:");
+
+//? Create collections */
+db.createCollection("sucursal");
+db.createCollection("sucursal_automovil");
+db.createCollection("automovil");
+db.createCollection("reserva");
+db.createCollection("cliente");
+db.createCollection("alquiler");
+db.createCollection("empleado");
+
+//? Insert documents into collections */
+db.sucursal.insertOne(
+    {   
+        _id: ObjectId(1),
+        Nombre: "Zona Franca",
+        Direccion: "CAlle 20",
+        Telefono: 34578117
+    }
+);
+db.sucursal_automovil.insertOne(
+    {
+        _id: ObjectId(1),
+        ID_Sucursal_id: ObjectId("00000001a3e7bb96f4d30e47"),
+        ID_Automovil: ObjectId(1),
+        cantidad: 5
+    }
+);
+db.automovil.insertOne({
+    _id: ObjectId(1),
+    ID_Automovil_id: ObjectId("00000001a3e7bb96f4d30e48"),
+    Marca: "Ford",
+    Modelo: 25,
+    Anio: 2022,
+    tipo: "Convertible",
+    capacidad: 4,
+    Precio_Diario: 50.5
+});
+db.reserva.insertOne({
+    ID_Reserva: ObjectId(1),
+    ID_Cliente_id: ObjectId(1),
+    ID_Automovil_id: ObjectId(1),
+
+    Fecha_Reserva: "05-07-2020",
+    Fecha_Inicio: "05-08-2020",
+    Fecha_Fin: "05-08-2021",
+    Estado: true
+});
+db.cliente.insertOne({
+    ID_Cliente: ObjectId(1),
+    Nombre: "Juan",
+    Apellido: "Velasco",
+    DNI: 10988456554,
+    Direccion: "Avn 5",
+    Telefono: "344178544",
+    Email: "juan@gmail.com",
+});
+db.alquiler.insertOne({
+    ID_Alquiler: ObjectId(1),
+    ID_Automovil_id:  ObjectId(1),
+    ID_Cliente_id:  ObjectId(1),
+    Fecha_Inicio: "05-08-2020",
+    Fecha_Fin: "05-08-2021",
+    Costo_total: 500,
+    Estado: true
+});
+db.alquiler.insertOne({
+    ID_Alquiler: ObjectId(1),
+    ID_Automovil_id:  ObjectId(1),
+    ID_Cliente_id:  ObjectId(1),
+    Fecha_Inicio: "05-08-2020",
+    Fecha_Fin: "05-08-2021",
+    Costo_total: 500,
+    Estado: true
+});
+
+//? Referencias */
+db.getCollection("sucursal").aggregate([
+    {
+        $lookup: {
+            from: "sucursal_automovil",
+            localField: "_id",
+            foreignField: "ID_Sucursal_id",
+            as: "Automoviles"
+        }
+    }
+]);
+
