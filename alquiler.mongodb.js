@@ -24,7 +24,6 @@ db.sucursal_automovil.insertOne({
     ID_Automovil: ObjectId(1),
     cantidad: 5,
 });
-
 db.automovil.insertOne({
     _id: ObjectId(1),
     ID_Automovil_id: ObjectId("00000001a3e7bb96f4d30e48"),
@@ -81,7 +80,6 @@ db.automovil.insertMany([
     }
 
 ]);
-
 db.reserva.insertOne({
     ID_Reserva: ObjectId(1),
     ID_Cliente_id: ObjectId(1),
@@ -91,7 +89,6 @@ db.reserva.insertOne({
     Fecha_Fin: "05-08-2021",
     Estado: true,
 });
-
 db.cliente.insertOne({
     ID_Cliente: ObjectId(1),
     Nombre: "Martin",
@@ -149,7 +146,6 @@ db.alquiler.insertOne({
     Costo_total: 500,
     Estado: true,
 });
-use("db_campus_alquiler:");
 db.alquiler.insertOne({
     ID_Alquiler: ObjectId(2),
     ID_Automovil_id: ObjectId("00000001a3e7bb96f4d30e4a"),
@@ -159,7 +155,6 @@ db.alquiler.insertOne({
     Costo_total: 100,
     Estado: true,
 });
-
 db.empleado.insertOne({
     ID_Empleado: ObjectId(1),
     Nombre: "Angel",
@@ -169,7 +164,6 @@ db.empleado.insertOne({
     Telefono: "3167852457",
     Cargo: "Jefe marketing",
 });
-
 db.registro_devolucion.insertOne({
     ID_Registro: ObjectId(1),
     ID_Alquiler_id: ObjectId(1),
@@ -192,10 +186,12 @@ db.registro_entrega.insertOne({
 //? Consultas 
 
 //? 1. Mostrar todos los clientes registrados en la base de datos.
+use("db_campus_alquiler:");
 db.cliente.find()
 
 //? 2. Obtener todos los automóviles disponibles para alquiler.
-db.getCollection("automovil").aggregate([
+use("db_campus_alquiler:");
+db.automovil.aggregate([
     {
         $lookup: {
             from: "alquiler",
@@ -225,7 +221,7 @@ db.getCollection("automovil").aggregate([
 
 //? 3. Listar todos los alquileres activos junto con los datos de los clientes relacionados.
 use("db_campus_alquiler:");
-db.getCollection("cliente").aggregate([
+db.cliente.aggregate([
     {
         $lookup: {
             from: "alquiler",
@@ -244,7 +240,6 @@ db.getCollection("cliente").aggregate([
     },
     {
         $unwind: "$Alquileres"
-        
     },
     {
         $match: {
@@ -255,65 +250,43 @@ db.getCollection("cliente").aggregate([
     }
 ]);
 
-
-db.getCollection("reserva").aggregate([
+//? 4. Mostrar todas las reservas pendientes con los datos del cliente y el automóvil reservado.
+use("db_campus_alquiler:");
+db.reserva.aggregate([
     {
         $lookup: {
             from: "automovil",
-            localField: "ID_Automovil_id",
-            foreignField: "_id",
-            as: "Reservas",
+            localField: "ID_Automovil_id" ,
+            foreignField: "_id", 
+            as: "Automoviles"
         },
+        $lookup: {
+            from: "cliente",
+            localField: "ID_Cliente_id" ,
+            foreignField: "_id", 
+            as: "Clientes"
+        }
     },
-]);
+    {
+        $unwind: "$Automoviles",
+    },
+    {
+        $unwind: "$Clientes"
 
-db.getCollection("automovil").aggregate([
-    {
-        $lookup: {
-            from: "sucursal_automovil",
-            localField: "_id",
-            foreignField: "ID_Automovil",
-            as: "Automoviles",
-        },
     },
-]);
-db.getCollection("automovil").aggregate([
     {
-        $lookup: {
-            from: "sucursal_automovil",
-            localField: "_id",
-            foreignField: "ID_Automovil",
-            as: "Automoviles",
-        },
+        $project: {
+            "Clientes._id": 0,
+            "Clientes.ID_Cliente": 0,
+
+        }
     },
-]);
-db.getCollection("automovil").aggregate([
     {
-        $lookup: {
-            from: "sucursal_automovil",
-            localField: "_id",
-            foreignField: "ID_Automovil",
-            as: "Automoviles",
-        },
+        $project: {
+            "Automoviles._id": 0,
+            "Automoviles.ID_Cliente": 0,
+            "Marca": "$Automoviles.Marca"
+
+        }
     },
-]);
-db.getCollection("automovil").aggregate([
-    {
-        $lookup: {
-            from: "sucursal_automovil",
-            localField: "_id",
-            foreignField: "ID_Automovil",
-            as: "Automoviles",
-        },
-    },
-]);
-db.getCollection("automovil").aggregate([
-    {
-        $lookup: {
-            from: "sucursal_automovil",
-            localField: "_id",
-            foreignField: "ID_Automovil",
-            as: "Automoviles",
-        },
-    },
-]);
+])
