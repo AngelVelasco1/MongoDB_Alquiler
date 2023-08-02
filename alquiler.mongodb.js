@@ -92,7 +92,6 @@ db.reserva.insertOne({
     Estado: true,
 });
 
-
 db.cliente.insertOne({
     ID_Cliente: ObjectId(1),
     Nombre: "Martin",
@@ -160,6 +159,7 @@ db.alquiler.insertOne({
     Costo_total: 100,
     Estado: true,
 });
+
 db.empleado.insertOne({
     ID_Empleado: ObjectId(1),
     Nombre: "Angel",
@@ -169,6 +169,7 @@ db.empleado.insertOne({
     Telefono: "3167852457",
     Cargo: "Jefe marketing",
 });
+
 db.registro_devolucion.insertOne({
     ID_Registro: ObjectId(1),
     ID_Alquiler_id: ObjectId(1),
@@ -188,31 +189,12 @@ db.registro_entrega.insertOne({
 });
 
 
+//? Consultas 
 
+//? 1. Mostrar todos los clientes registrados en la base de datos.
+db.cliente.find()
 
-db.getCollection("sucursal").aggregate([
-    {
-        $lookup: {
-            from: "sucursal_automovil",
-            localField: "_id",
-            foreignField: "ID_Sucursal_id",
-            as: "Automoviles",
-        },
-    },
-]);
-db.getCollection("automovil").aggregate([
-    {
-        $lookup: {
-            from: "sucursal_automovil",
-            localField: "_id",
-            foreignField: "ID_Automovil",
-            as: "Automoviles",
-        },
-    },
-]);
-
-//? Filtrar automoviles con alquileres */
-use("db_campus_alquiler:")
+//? 2. Obtener todos los automóviles disponibles para alquiler.
 db.getCollection("automovil").aggregate([
     {
         $lookup: {
@@ -241,29 +223,50 @@ db.getCollection("automovil").aggregate([
     
 ]);
 
+//? 3. Listar todos los alquileres activos junto con los datos de los clientes relacionados.
+use("db_campus_alquiler:");
 db.getCollection("cliente").aggregate([
     {
         $lookup: {
-            from: "reserva",
-            localField: "ID_Cliente",
+            from: "alquiler",
+            localField: "_id",
             foreignField: "ID_Cliente_id",
+            as: "Alquileres",
+        },
+    },
+    {
+        $project: {
+            "Alquileres._id": 0,
+            "Alquileres.ID_Alquiler": 0,
+            "Alquileres.ID_Automovil_id": 0,
+            "Alquileres.ID_Cliente_id": 0
+        }
+    },
+    {
+        $unwind: "$Alquileres"
+        
+    },
+    {
+        $match: {
+            "Alquileres.Estado": {
+                $eq: true
+            }
+        }
+    }
+]);
+
+
+db.getCollection("reserva").aggregate([
+    {
+        $lookup: {
+            from: "automovil",
+            localField: "ID_Automovil_id",
+            foreignField: "_id",
             as: "Reservas",
         },
     },
 ]);
 
-db.getCollection("cliente").aggregate([
-    {
-        $lookup: {
-            from: "alquiler",
-            localField: "ID_Cliente",
-            foreignField: "ID_Cliente_id",
-            as: "Alquileres",
-        },
-    },
-]);
-
-
 db.getCollection("automovil").aggregate([
     {
         $lookup: {
@@ -314,17 +317,3 @@ db.getCollection("automovil").aggregate([
         },
     },
 ]);
-db.getCollection("automovil").aggregate([
-    {
-        $lookup: {
-            from: "sucursal_automovil",
-            localField: "_id",
-            foreignField: "ID_Automovil",
-            as: "Automoviles",
-        },
-    },
-]);
-
-//? Consultas */
-use("db_campus_alquiler:");
-db.cliente.find();
