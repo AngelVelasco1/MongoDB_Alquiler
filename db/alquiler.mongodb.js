@@ -418,3 +418,12 @@ db.cliente.aggregate([
         }
     }
 ]);
+
+//? 13. Mostrar los empleados con cargo de "Gerente" o "Asistente".
+use("db_campus_alquiler:");
+db.empleado.find({
+    $or: [
+        {Cargo: {$eq: "Gerente"}}, 
+        {Cargo: {$eq: "Asistente"}}
+    ]
+})
