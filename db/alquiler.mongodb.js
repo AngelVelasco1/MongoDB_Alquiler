@@ -511,3 +511,7 @@ db.sucursal.aggregate([
         }
     }
 ])
+
+//? 17. Obtener la cantidad total de alquileres registrados en la base de datos
+use("db_campus_alquiler:");
+db.alquiler.countDocuments({});
