@@ -496,7 +496,7 @@ db.sucursal.aggregate([
             Nombre: { $first: "$Nombre" },
             Direccion: { $first: "$Direccion" },
             Telefono: { $first: "$Telefono" },
-            Cantidad_Total: {$sum: "$Automoviles.cantidad"}
+            Cantidad_Total: { $sum: "$Automoviles.cantidad" }
 
         }
 
@@ -521,10 +521,17 @@ use("db_campus_alquiler:");
 db.automovil.find({
     $and: [
         {
-            capacidad: {$eq: 5},
+            capacidad: { $eq: 5 },
         },
         {
-            Estado: {$eq: "Disponible"}
+            Estado: { $eq: "Disponible" }
         }
     ]
-})
+});
+
+//? Listar los alquileres con fecha de inicio entre '2023-07-05' y '2023-07-10'
+use("db_campus_alquiler:");
+db.alquiler.find({
+    Fecha_Inicio: { $gte: new Date("2023-07-05T00:00:00.000+00:00"), $lte: new Date("2023-07-10T00:00:00.000+00:00") }
+
+});
