@@ -353,4 +353,8 @@ db.alquiler.aggregate([
             "Estado": 0
         }
     }
-])
+]);
+
+//? 8. Mostrar todos los automóviles con una capacidad mayor a 5 personas
+use("db_campus_alquiler:");
+db.automovil.find({capacidad: {$gt: 5}});
