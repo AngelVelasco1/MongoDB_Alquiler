@@ -299,3 +299,7 @@ db.reserva.aggregate([
 //? 5. Obtener los detalles del alquiler con el ID_Alquiler específico. 
 use("db_campus_alquiler:");
 db.alquiler.find({ID_Alquiler: {$eq: ObjectId("64c90bd3dd7baec87a23e154")}});
+
+//? 6. Listar los empleados con el cargo de "Vendedor"
+use("db_campus_alquiler:");
+db.empleado.find({Cargo: {$eq: "Vendedor"}})
