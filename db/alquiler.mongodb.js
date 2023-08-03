@@ -260,6 +260,8 @@ db.reserva.aggregate([
             foreignField: "_id", 
             as: "Automoviles"
         },
+    },
+    {
         $lookup: {
             from: "cliente",
             localField: "ID_Cliente_id" ,
@@ -275,18 +277,21 @@ db.reserva.aggregate([
 
     },
     {
-        $project: {
-            "Clientes._id": 0,
-            "Clientes.ID_Cliente": 0,
-
+        $match: {
+            Estado: "Pendiente"
         }
     },
     {
         $project: {
+            "ID_Reserva": 0,
+            "ID_Cliente_id": 0,
+            "ID_Automovil_id": 0,
+            "Clientes._id": 0,
+            "Clientes.ID_Cliente": 0,
             "Automoviles._id": 0,
             "Automoviles.ID_Cliente": 0,
-            "Marca": "$Automoviles.Marca"
+            "Automoviles.ID_Automovil_id": 0
 
         }
-    },
-])
+    }
+]);
