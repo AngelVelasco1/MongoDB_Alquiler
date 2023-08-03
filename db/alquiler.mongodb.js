@@ -209,14 +209,14 @@ db.automovil.aggregate([
         }
     },
     {
-        $unwind: "$Alquileres" 
+        $unwind: "$Alquileres"
     },
     {
         $match: {
-            Alquileres: {$exists: true, $ne: []}
+            Alquileres: { $exists: true, $ne: [] }
         }
     }
-    
+
 ]);
 
 //? 3. Listar todos los alquileres activos junto con los datos de los clientes relacionados.
@@ -256,16 +256,16 @@ db.reserva.aggregate([
     {
         $lookup: {
             from: "automovil",
-            localField: "ID_Automovil_id" ,
-            foreignField: "_id", 
+            localField: "ID_Automovil_id",
+            foreignField: "_id",
             as: "Automoviles"
         },
     },
     {
         $lookup: {
             from: "cliente",
-            localField: "ID_Cliente_id" ,
-            foreignField: "_id", 
+            localField: "ID_Cliente_id",
+            foreignField: "_id",
             as: "Clientes"
         }
     },
@@ -298,8 +298,35 @@ db.reserva.aggregate([
 
 //? 5. Obtener los detalles del alquiler con el ID_Alquiler específico. 
 use("db_campus_alquiler:");
-db.alquiler.find({ID_Alquiler: {$eq: ObjectId("64c90bd3dd7baec87a23e154")}});
+db.alquiler.find({ ID_Alquiler: { $eq: ObjectId("64c90bd3dd7baec87a23e154") } });
 
 //? 6. Listar los empleados con el cargo de "Vendedor"
 use("db_campus_alquiler:");
-db.empleado.find({Cargo: {$eq: "Vendedor"}})
+db.empleado.find({ Cargo: { $eq: "Vendedor" } })
+
+//? 7. Cantidad total de automoviles de cada sucursal
+use("db_campus_alquiler:");
+db.sucursal.aggregate([
+    {
+        $lookup: {
+            from: "sucursal_automovil",
+            localField: "_id",
+            foreignField: "ID_Sucursal_id",
+            as: "Automoviles"
+        }
+    }, 
+    {
+        $unwind: "$Automoviles"
+    },
+    {
+        $project: {
+            "_id": 0,
+            "Automoviles._id": 0,
+            "Automoviles.ID_Sucursal_id": 0,
+            "Automoviles.ID_Automovil": 0,
+            "Automoviles.Name": 0,
+        }
+    }
+ 
+
+])
