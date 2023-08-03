@@ -355,10 +355,26 @@ db.alquiler.aggregate([
     }
 ]);
 
-//? 8. Mostrar todos los automóviles con una capacidad mayor a 5 personas
+//? 9 .Listar los clientes con el DNI específico. 
+use("db_campus_alquiler:");
+db.cliente.aggregate([
+    {
+        $match: {
+            DNI: {$eq: 10988456554}
+        } 
+    },
+    {
+        $project: {
+            "ID_Cliente": 0,   
+            "_id": 0
+        }
+    }
+]);
+
+//? 10. Mostrar todos los automóviles con una capacidad mayor a 5 personas
 use("db_campus_alquiler:");
 db.automovil.find({capacidad: {$gt: 5}});
 
-//? 9. Obtener los detalles del alquiler que tiene fecha de inicio en '2023-07-05'
+//? 11. Obtener los detalles del alquiler que tiene fecha de inicio en '2023-07-05'
 use("db_campus_alquiler:");
 db.alquiler.find({Fecha_Inicio: {$eq: "2023-07-05"}})
