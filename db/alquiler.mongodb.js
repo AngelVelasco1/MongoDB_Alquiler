@@ -278,11 +278,13 @@ db.reserva.aggregate([
     },
     {
         $match: {
-            Estado: "Pendiente"
+            Estado: {$eq: "Pendiente"}
         }
     },
     {
         $project: {
+            "_id": 0,
+            "Estado": 0,
             "ID_Reserva": 0,
             "ID_Cliente_id": 0,
             "ID_Automovil_id": 0,
@@ -329,4 +331,26 @@ db.sucursal.aggregate([
     }
  
 
+])
+
+//? 8. Obtener el costo total de un alquiler específico. 
+use("db_campus_alquiler:");
+db.alquiler.aggregate([
+    {
+        $match: {
+            ID_Alquiler: {$eq: ObjectId("64c854fcda0104b3f605ce06")}
+        } 
+    },
+    {
+        $project: {
+            "_id": 0,
+            "ID_Alquiler": 0,
+            "ID_Automovil_id": 0,
+            "ID_Cliente_id": 0,
+            "Fecha_Inicio": 0,
+            "Fecha_Fin": 0,
+            "Fecha_Fin": 0,
+            "Estado": 0
+        }
+    }
 ])
