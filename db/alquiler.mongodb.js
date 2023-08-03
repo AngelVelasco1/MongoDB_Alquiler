@@ -278,7 +278,7 @@ db.reserva.aggregate([
     },
     {
         $match: {
-            Estado: {$eq: "Pendiente"}
+            Estado: { $eq: "Pendiente" }
         }
     },
     {
@@ -316,7 +316,7 @@ db.sucursal.aggregate([
             foreignField: "ID_Sucursal_id",
             as: "Automoviles"
         }
-    }, 
+    },
     {
         $unwind: "$Automoviles"
     },
@@ -329,7 +329,7 @@ db.sucursal.aggregate([
             "Automoviles.Name": 0,
         }
     }
- 
+
 
 ])
 
@@ -338,8 +338,8 @@ use("db_campus_alquiler:");
 db.alquiler.aggregate([
     {
         $match: {
-            ID_Alquiler: {$eq: ObjectId("64c854fcda0104b3f605ce06")}
-        } 
+            ID_Alquiler: { $eq: ObjectId("64c854fcda0104b3f605ce06") }
+        }
     },
     {
         $project: {
@@ -360,12 +360,12 @@ use("db_campus_alquiler:");
 db.cliente.aggregate([
     {
         $match: {
-            DNI: {$eq: 10988456554}
-        } 
+            DNI: { $eq: 10988456554 }
+        }
     },
     {
         $project: {
-            "ID_Cliente": 0,   
+            "ID_Cliente": 0,
             "_id": 0
         }
     }
@@ -373,8 +373,48 @@ db.cliente.aggregate([
 
 //? 10. Mostrar todos los automóviles con una capacidad mayor a 5 personas
 use("db_campus_alquiler:");
-db.automovil.find({capacidad: {$gt: 5}});
+db.automovil.find({ capacidad: { $gt: 5 } });
 
 //? 11. Obtener los detalles del alquiler que tiene fecha de inicio en '2023-07-05'
 use("db_campus_alquiler:");
-db.alquiler.find({Fecha_Inicio: {$eq: "2023-07-05"}})
+db.alquiler.find({ Fecha_Inicio: { $eq: "2023-07-05" } })
+
+//? 12. Listar las reservas pendientes realizadas por un cliente específico
+use("db_campus_alquiler:");
+db.cliente.aggregate([
+    {
+        $lookup: {
+            from: "reserva",
+            localField: "ID_Cliente",
+            foreignField: "ID_Cliente_id",
+            as: "Reservas"
+        }
+    },
+    {
+        $unwind: "$Reservas"
+    },
+    {
+        $match: {
+            $and: [{ "Reservas.Estado": { $eq: "Pendiente" } }, { ID_Cliente: { $eq: ObjectId("64c8547b0eae2c9b81d69230") } }]
+        }
+    },
+    {
+        $group: {
+            _id: "$ID_Cliente",
+            Cliente: { $first: "$$ROOT" }, // Usamos $$ROOT para mantener el documento completo del cliente
+            Reservas: { $push: "$Reservas" } // Agrupamos las reservas en un arreglo
+        }
+    },
+    {
+        $project: {
+            "_id": 0,
+            "Cliente._id": 0,
+            "Cliente.ID_Cliente": 0,
+            "Cliente.Reservas": 0,
+            "Reservas._id": 0,
+            "Reservas.ID_Reserva": 0,
+            "Reservas.ID_Cliente_id": 0,
+            "Reservas.ID_Automovil_id": 0,
+        }
+    }
+]);
