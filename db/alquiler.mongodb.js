@@ -423,8 +423,8 @@ db.cliente.aggregate([
 use("db_campus_alquiler:");
 db.empleado.find({
     $or: [
-        {Cargo: {$eq: "Gerente"}}, 
-        {Cargo: {$eq: "Asistente"}}
+        { Cargo: { $eq: "Gerente" } },
+        { Cargo: { $eq: "Asistente" } }
     ]
 })
 
@@ -445,7 +445,7 @@ db.cliente.aggregate([
     },
     {
         $match: {
-            Alquileres: { $exists: true, $ne: [],  }
+            Alquileres: { $exists: true, $ne: [], }
         }
     },
     {
@@ -469,3 +469,10 @@ db.cliente.aggregate([
     },
 
 ]);
+
+//? 15. Listar todos los automóviles ordenados por marca y modelo. 
+use("db_campus_alquiler:");
+db.automovil.find().sort(
+    { Marca: 1 },
+    { Modelo: 1 }
+)
