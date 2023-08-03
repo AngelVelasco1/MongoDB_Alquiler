@@ -427,3 +427,45 @@ db.empleado.find({
         {Cargo: {$eq: "Asistente"}}
     ]
 })
+
+
+//? 14. Obtener los datos de los clientes que realizaron al menos un alquiler.
+use("db_campus_alquiler:");
+db.cliente.aggregate([
+    {
+        $lookup: {
+            from: "alquiler",
+            localField: "ID_Cliente",
+            foreignField: "ID_Cliente_id",
+            as: "Alquileres",
+        }
+    },
+    {
+        $unwind: "$Alquileres"
+    },
+    {
+        $match: {
+            Alquileres: { $exists: true, $ne: [],  }
+        }
+    },
+    {
+        $group: {
+            _id: "$ID_Cliente",
+            Cliente: { $first: "$$ROOT" }, // Usamos $$ROOT para mantener el documento completo del cliente
+            Alquileres: { $push: "$Alquileres" } // Agrupamos las reservas en un arreglo
+        }
+    },
+    {
+        $project: {
+            "_id": 0,
+            "Cliente._id": 0,
+            "Cliente.ID_Cliente": 0,
+            "Cliente.Alquileres": 0,
+            "Alquileres._id": 0,
+            "Alquileres.ID_Alquiler": 0,
+            "Alquileres.ID_Cliente_id": 0,
+            "Alquileres.ID_Automovil_id": 0,
+        }
+    },
+
+]);
