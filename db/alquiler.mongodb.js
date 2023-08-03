@@ -515,3 +515,16 @@ db.sucursal.aggregate([
 //? 17. Obtener la cantidad total de alquileres registrados en la base de datos
 use("db_campus_alquiler:");
 db.alquiler.countDocuments({});
+
+//? 18. .Mostrar los automóviles con capacidad igual a 5 personas y que estén disponibles
+use("db_campus_alquiler:");
+db.automovil.find({
+    $and: [
+        {
+            capacidad: {$eq: 5},
+        },
+        {
+            Estado: {$eq: "Disponible"}
+        }
+    ]
+})
