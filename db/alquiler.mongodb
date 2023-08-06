@@ -136,7 +136,7 @@ db.automovil.insertMany([
         Marca: "Chevrolet",
         Modelo: "Renault",
         Anio: 2000,
-        Tipo:"Automovil",
+        Tipo: "Automovil",
         Capacidad: 4,
         Precio_Diario: 50000
     },
@@ -146,7 +146,7 @@ db.automovil.insertMany([
         Marca: "Mazda",
         Modelo: "Hybrid",
         Anio: 2020,
-        Tipo:"Automovil",
+        Tipo: "Automovil",
         Capacidad: 6,
         Precio_Diario: 120000
     },
@@ -156,7 +156,7 @@ db.automovil.insertMany([
         Marca: "Volvo",
         Modelo: "V60",
         Anio: 2022,
-        Tipo:"Camioneta",
+        Tipo: "Camioneta",
         Capacidad: 7,
         Precio_Diario: 250000
     },
@@ -166,7 +166,7 @@ db.automovil.insertMany([
         Marca: "BMW",
         Modelo: "Series 7",
         Anio: 2023,
-        Tipo:"Automovil",
+        Tipo: "Automovil",
         Capacidad: 6,
         Precio_Diario: 300000
     },
@@ -176,7 +176,7 @@ db.automovil.insertMany([
         Marca: "Audi",
         Modelo: "A4",
         Anio: 2021,
-        Tipo:"Automovil",
+        Tipo: "Automovil",
         Capacidad: 5,
         Precio_Diario: 100000
     }
@@ -186,7 +186,7 @@ use("db_campus_alquiler")
 db.createCollection("sucursal_automovil", {
     capped: true,
     size: 690,
-    max: 5  
+    max: 5
 })
 db.sucursal_automovil.insertMany([
     {
@@ -205,7 +205,7 @@ db.sucursal_automovil.insertMany([
         _id: 3,
         ID_Sucursal_id: 3,
         ID_Automovil_id: 3,
-        Cantidad_Disponible:5
+        Cantidad_Disponible: 5
     },
     {
         _id: 4,
@@ -224,8 +224,8 @@ db.sucursal_automovil.insertMany([
 use("db_campus_alquiler")
 db.createCollection("reserva", {
     capped: true,
-    size: 690,
-    max: 5  
+    size: 790,
+    max: 5
 })
 db.reserva.insertMany([
     {
@@ -283,12 +283,12 @@ db.reserva.insertMany([
 use("db_campus_alquiler")
 db.createCollection("cliente", {
     capped: true,
-    size: 690,
+    size: 790,
     max: 5,
     validator: {
         $jsonSchema: {
             bsonType: "object",
-            required: ["ID_cliente", "Nombre", "Apellido", "DNI", "Direccion", "Tipo", "Capacidad", "Precio_Diario"],
+            required: ["ID_cliente", "Nombre", "Apellido", "DNI", "Direccion", "Telefono", "Email"],
             properties: {
                 ID_cliente: {
                     bsonType: "int",
@@ -329,60 +329,339 @@ db.createCollection("cliente", {
             }
         }
     }
-})
-db.reserva.insertMany([
+});
+use("db_campus_alquiler")
+db.cliente.insertMany([
     {
         _id: 1,
         ID_cliente: 1,
         Nombre: "Juan",
-        Apellido:"Delgado ",
-        DNI:"108757124",
-        Direccion:"Calle 20",
-        Telefono:"+57 318-745-9781",
-        Email:"juan@gmail.com"
+        Apellido: "Delgado",
+        DNI: "10875712",
+        Direccion: "Calle 20",
+        Telefono: "+57 318-745-9781",
+        Email: "juan@gmail.com"
     },
     {
         _id: 2,
         ID_cliente: 2,
         Nombre: "Sofia",
-        Apellido:"Villalobos ",
-        DNI:"178424387",
-        Direccion:"Calle 40",
-        Telefono:"+57 311-578-4123",
-        Email:"sofia@gmail.com"
+        Apellido: "Villalobos",
+        DNI: "17842438",
+        Direccion: "Calle 40",
+        Telefono: "+57 311-578-4123",
+        Email: "sofia@gmail.com"
     },
     {
         _id: 3,
         ID_cliente: 3,
         Nombre: "Andres",
-        Apellido:"Villanueva",
-        DNI:"10875758",
-        Direccion:"Calle 1",
-        Telefono:"+57 312-248-4023",
-        Email:"andres@gmail.com"
+        Apellido: "Villanueva",
+        DNI: "10875758",
+        Direccion: "Calle 1",
+        Telefono: "+57 312-248-4023",
+        Email: "andres@gmail.com"
     },
     {
         _id: 4,
         ID_cliente: 4,
         Nombre: "Jose",
-        Apellido:"Garcia",
-        DNI:"178247866",
-        Direccion:"Calle 2",
-        Telefono:"+57 314-000-4023",
-        Email:"jose@gmail.com"
+        Apellido: "Garcia",
+        DNI: "17824786",
+        Direccion: "Calle 2",
+        Telefono: "+57 314-000-4023",
+        Email: "jose@gmail.com"
     },
     {
         _id: 5,
         ID_cliente: 5,
         Nombre: "Valentina",
-        Apellido:"Perez",
-        DNI:"107745781 ",
-        Direccion:"Calle 5",
-        Telefono:"+57 310-147-0000",
-        Email:"valentina@gmail.com"
+        Apellido: "Perez",
+        DNI: "10774578",
+        Direccion: "Calle 5",
+        Telefono: "+57 310-147-0000",
+        Email: "valentina@gmail.com"
     },
 ]);
 
+use("db_campus_alquiler")
+db.createCollection("alquiler", {
+    capped: true,
+    size: 790,
+    max: 5
+}
+)
+db.alquiler.insertMany([
+    {
+        _id: 1,
+        ID_alquiler: 1,
+        ID_Cliente_id: 1,
+        ID_Automovil_id: 1,
+        Fecha_Inicio: "2023-08-05",
+        Fecha_Fin: "2023-09-20",
+        Costo_Total: 500000,
+        Estado: "Activo"
+    },
+    {
+        _id: 2,
+        ID_alquiler: 2,
+        ID_Cliente_id: 2,
+        ID_Automovil_id: 2,
+        Fecha_Inicio: "2023-07-05",
+        Fecha_Fin: "2023-08-20",
+        Costo_Total: 1000000,
+        Estado: "Activo"
+    },
+    {
+        _id: 3,
+        ID_alquiler: 3,
+        ID_Cliente_id: 3,
+        ID_Automovil_id: 3,
+        Fecha_Inicio: "2023-08-05",
+        Fecha_Fin: "2023-10-20",
+        Costo_Total: 1500000,
+        Estado: "Finalizado"
+    },
+    {
+        _id: 4,
+        ID_alquiler: 4,
+        ID_Cliente_id: 4,
+        ID_Automovil_id: 4,
+        Fecha_Inicio: "2023-09-05",
+        Fecha_Fin: "2024-10-20",
+        Costo_Total: 1600000,
+        Estado: "Finalizado"
+    },
+    {
+        _id: 5,
+        ID_alquiler: 5,
+        ID_Cliente_id: 5,
+        ID_Automovil_id: 5,
+        Fecha_Inicio: "2023-04-25",
+        Fecha_Fin: "2023-06-01",
+        Costo_Total: 1800000,
+        Estado: "Activo"
+    },
+]);
+
+use("db_campus_alquiler")
+db.createCollection("registro_devolucion", {
+    capped: true,
+    size: 790,
+    max: 5
+}
+)
+db.registro_devolucion.insertMany([
+    {
+        _id: 1,
+        ID_registro: 1,
+        ID_Alquiler_id: 1,
+        ID_Empleado_id: 1,
+        Fecha_Devolucion: "2024-01-25",
+        Combustible_Devuelto: 2.5,
+        Kilometraje_Devuelto: 10000,
+        Monto_Adicional: 15000,
+    },
+    {
+        _id: 2,
+        ID_registro: 2,
+        ID_Alquiler_id: 2,
+        ID_Empleado_id: 2,
+        Fecha_Devolucion: "2024-01-10",
+        Combustible_Devuelto: 5,
+        Kilometraje_Devuelto: 50000,
+        Monto_Adicional: 50000,
+    },
+    {
+        _id: 3,
+        ID_registro: 3,
+        ID_Alquiler_id: 3,
+        ID_Empleado_id: 3,
+        Fecha_Devolucion: "2024-02-10",
+        Combustible_Devuelto: 10,
+        Kilometraje_Devuelto: 15000,
+        Monto_Adicional: 100000,
+    },
+    {
+        _id: 4,
+        ID_registro: 4,
+        ID_Alquiler_id: 4,
+        ID_Empleado_id: 4,
+        Fecha_Devolucion: "2024-01-10",
+        Combustible_Devuelto: 1.5,
+        Kilometraje_Devuelto: 10000,
+        Monto_Adicional: 200000,
+    },
+    {
+        _id: 5,
+        ID_registro: 5,
+        ID_Alquiler_id: 5,
+        ID_Empleado_id: 5,
+        Fecha_Devolucion: "2024-05-25",
+        Combustible_Devuelto: 4.2,
+        Kilometraje_Devuelto: 2000,
+        Monto_Adicional: 180000,
+    },
+]);
+
+use("db_campus_alquiler")
+db.createCollection("registro_entrega", {
+    capped: true,
+    size: 790,
+    max: 5
+}
+)
+db.registro_entrega.insertMany([
+    {
+        _id: 1,
+        ID_registro: 1,
+        ID_Alquiler_id: 1,
+        ID_Empleado_id: 1,
+        Fecha_Entrega: "2023-12-01",
+        Combustible_Entregado: 20,
+        Kilometraje_Entregado: 20000
+    },
+    {
+        _id: 2,
+        ID_registro: 2,
+        ID_Alquiler_id: 2,
+        ID_Empleado_id: 2,
+        Fecha_Entrega: "2023-11-01",
+        Combustible_Entregado: 10,
+        Kilometraje_Entregado: 15000
+    },
+    {
+        _id: 3,
+        ID_registro: 3,
+        ID_Alquiler_id: 3,
+        ID_Empleado_id: 3,
+        Fecha_Entrega: "2023-12-01",
+        Combustible_Entregado: 20,
+        Kilometraje_Entregado: 10000
+    },
+    {
+        _id: 4,
+        ID_registro: 4,
+        ID_Alquiler_id: 4,
+        ID_Empleado_id: 4,
+        Fecha_Entrega: "2023-12-01",
+        Combustible_Entregado: 5,
+        Kilometraje_Entregado: 25000
+    },
+    {
+        _id: 5,
+        ID_registro: 5,
+        ID_Alquiler_id: 5,
+        ID_Empleado_id: 5,
+        Fecha_Entrega: "2023-09-09",
+        Combustible_Entregado: 21,
+        Kilometraje_Entregado: 5000
+    },
+]);
+
+use("db_campus_alquiler")
+db.createCollection("empleado", {
+    capped: true,
+    size: 790,
+    max: 5,
+    validator: {
+        $jsonSchema: {
+            bsonType: "object",
+            required: ["ID_empleado", "Nombre", "Apellido", "DNI", "Direccion", "Cargo"],
+            properties: {
+                ID_empleado: {
+                    bsonType: "int",
+                    minimum: 0,
+                    maximum: 50,
+                    description: "Id del empleado. Debe ser un numero en rango de 0 a 50"
+                },
+                Nombre: {
+                    bsonType: "string",
+                    pattern: "^[A-Za-z\\s]+$",
+                    description: "Nombre del empleado. Debe ser un string sin caracteres especiales"
+                },
+                Apellido: {
+                    bsonType: "string",
+                    pattern: "^[A-Za-z\\s]+$",
+                    description: "Apellido del empleado. Debe ser un string sin caracteres especiales"
+                },
+                DNI: {
+                    bsonType: "string",
+                    pattern: "^[0-9]{7,8}$",
+                    description: "Especifica el número de documento de identidad. Debe ser un número de 7 a 8 dígitos."
+                },
+                Direccion: {
+                    bsonType: "string",
+                    pattern: "^[a-zA-Z0-9\\s\\.,#-]+$",
+                    description: "Especifica la direccion. Debe ser un string"
+                },
+                Telefono: {
+                    bsonType: "string",
+                    pattern: "^(?:(?:\\+\\d{1,3}|0)[\\d- ]+)?\\d+$",
+                    description: "Especifica el teléfono. Debe ser un string con un formato +57 311-578-4123"
+                },
+                Cargo: {
+                    bsonType: "string",
+                    pattern: "^[A-Za-z\\s]+$",
+                    description: "Cargo del empleado. Debe ser un string sin caracteres especiales"
+                }
+            }
+        }
+    }
+}
+)
+db.empleado.insertMany([
+    {
+        _id: 1,
+        ID_empleado: 1,
+        Nombre: "Valeria",
+        Apellido: "Velasco",
+        DNI: "78475474",
+        Direccion: "Calle 2",
+        Telefono: "+57 301-586-9547",
+        Cargo: "Gerente"
+    },
+    {
+        _id: 2,
+        ID_empleado: 2,
+        Nombre: "Nataly",
+        Apellido: "Archiniegas",
+        DNI: "18075874",
+        Direccion: "Calle 11",
+        Telefono: "+57 321-014-5874",
+        Cargo: "Asistente"
+    },
+    {
+        _id: 3,
+        ID_empleado: 3,
+        Nombre: "Amanda",
+        Apellido: "Miguel",
+        DNI: "98445470",
+        Direccion: "Calle 16",
+        Telefono: "+57 301-147-7425",
+        Cargo: "Asistente"
+    },
+    {
+        _id: 4,
+        ID_empleado: 4,
+        Nombre: "Leonardo",
+        Apellido: "Diaz",
+        DNI: "54015474",
+        Direccion: "Calle 45",
+        Telefono: "+57 316-123-985",
+        Cargo: "Marketing"
+    },
+    {
+        _id: 5,
+        ID_empleado: 5,
+        Nombre: "Andres",
+        Apellido: "Manosalva",
+        DNI: "17565274",
+        Direccion: "Calle 25",
+        Telefono: "+57 301-586-9547",
+        Cargo: "Matenimiento"
+    },
+]);
 
 //? Consultas 
 
