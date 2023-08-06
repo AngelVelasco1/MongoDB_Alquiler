@@ -5,11 +5,18 @@
   "main": "app.js",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "nodemon --quiet ./app.js"
   },
   "author": "Angel Velasco",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.18.2"
+    "express": "4.18.2",
+    "express-rate-limit": "6.9.0",
+    "mongodb": "5.7.0"
+  },
+  "devDependencies": {
+    "body-parser": "1.20.2",
+    "dotenv": "16.3.1",
+    "nodemon": "3.0.1"
   }
 }
