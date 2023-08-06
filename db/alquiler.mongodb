@@ -1,6 +1,7 @@
 use("db_campus_alquiler");
 
-//? Schemas
+//? Schemas and limit
+
 use("db_campus_alquiler");
 db.createCollection("sucursal", {
     capped: true,
@@ -36,7 +37,6 @@ db.createCollection("sucursal", {
         }
     }
 });
-use("db_campus_alquiler");
 db.sucursal.insertMany([
     {
         ID_sucursal: 1,
@@ -67,6 +67,109 @@ db.sucursal.insertMany([
         Nombre: "Bogota",
         Direccion: "calle 50 #15",
         Telefono: "+57 318-147-8998",
+    }
+]);
+
+use("db_campus_alquiler");
+let añoActual = new Date().getFullYear();
+db.createCollection("automovil", {
+    capped: true,
+    size: 690,
+    max: 5,
+    validator: {
+        $jsonSchema: {
+            bsonType: "object",
+            required: ["ID_automovil", "Marca", "Modelo", "Anio", "Tipo", "Capacidad", "Precio_Diario"],
+            properties: {
+                ID_automovil: {
+                    bsonType: "int",
+                    minimum: 0,
+                    maximum: 50,
+                    description: "Id del automovil. Debe ser un numero en rango de 0 a 50"
+                },
+                Marca: {
+                    bsonType: "string",
+                    pattern: "^[A-Za-z\\s]+$",
+                    description: "Especifica la marca del automovil. Debe ser un string sin caracteres especiales"
+                },
+                Modelo: {
+                    bsonType: "string",
+                    pattern: "^[a-zA-Z0-9\\s\\.,#-]+$",
+                    description: "Especifica el modelo del automovil. Debe ser un string, puedo contener caracteres especiales y numeros"
+                },
+                Anio: {
+                    bsonType: "int",
+                    minimum: 1900,
+                    maximum: añoActual,
+                    description: "Especifica el año del automovil. Debe ser un entero entre 1900 hasta el año presente"
+                },
+                Tipo: {
+                    bsonType: "string",
+                    pattern: "^[A-Za-z\\s]+$",
+                    description: "Especifica el tipo del automovil. Debe ser un string sin caracteres especiales"
+                },
+                Capacidad: {
+                    bsonType: "int",
+                    minimum: 4,
+                    maximum: 8,
+                    description: "Especifica la capacidad del automovil. Debe ser un numero entre 4 y 8"
+                },
+                Precio_Diario: {
+                    bsonType: "int",
+                    minimum: 0,
+                    maximum: 100000000,
+                    description: "Especifica el precio del automovil por dia. Puede ser un numero con partes decimales"
+                }
+            }
+        }
+    }
+});
+use("db_campus_alquiler");
+db.automovil.insertMany([
+    {
+        ID_automovil: 1,
+        Marca: "Chevrolet",
+        Modelo: "Renault",
+        Anio: 2000,
+        Tipo:"Automovil",
+        Capacidad: 4,
+        Precio_Diario: 50000
+    },
+    {
+        ID_automovil: 2,
+        Marca: "Mazda",
+        Modelo: "Hybrid",
+        Anio: 2020,
+        Tipo:"Automovil",
+        Capacidad: 6,
+        Precio_Diario: 120000
+    },
+    {
+        ID_automovil: 3,
+        Marca: "Volvo",
+        Modelo: "V60",
+        Anio: 2022,
+        Tipo:"Camioneta",
+        Capacidad: 7,
+        Precio_Diario: 250000
+    },
+    {
+        ID_automovil: 4,
+        Marca: "BMW",
+        Modelo: "Series 7",
+        Anio: 2023,
+        Tipo:"Automovil",
+        Capacidad: 6,
+        Precio_Diario: 300000
+    },
+    {
+        ID_automovil: 5,
+        Marca: "Audi",
+        Modelo: "A4",
+        Anio: 2021,
+        Tipo:"Automovil",
+        Capacidad: 5,
+        Precio_Diario: 100000
     }
 ]);
 
