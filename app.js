@@ -8,7 +8,7 @@ app.use(express.json());
 app.use(express.text());
 
 //? Routes
-app.use('/utomovil', storageAutomovil);
+app.use('/automovil', storageAutomovil);
 
 //? Env
 dotenv.config();
