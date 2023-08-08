@@ -2,12 +2,14 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import storageAutomovil from './routes/automovil.js';
+import storageCliente from './routes/cliente.js';
 
 const app = express();
 app.use(express.json()); 
 app.use(express.text());
 
 //? Routes
+app.use('/cliente', storageCliente);
 app.use('/automovil', storageAutomovil);
 
 //? Env

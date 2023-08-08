@@ -1,7 +1,6 @@
 use("db_campus_alquiler");
 
 //? Schemas and limit
-
 use("db_campus_alquiler");
 db.createCollection("sucursal", {
     capped: true,
@@ -330,7 +329,6 @@ db.createCollection("cliente", {
         }
     }
 });
-use("db_campus_alquiler")
 db.cliente.insertMany([
     {
         _id: 1,
@@ -649,7 +647,7 @@ db.empleado.insertMany([
         DNI: "54015474",
         Direccion: "Calle 45",
         Telefono: "+57 316-123-985",
-        Cargo: "Marketing"
+        Cargo: "Vendedor"
     },
     {
         _id: 5,
@@ -713,7 +711,7 @@ db.cliente.aggregate([
     {
         $project: {
             "Alquileres._id": 0,
-            "Alquileres.ID_Alquiler": 0,
+            "Alquileres.ID_alquiler": 0,
             "Alquileres.ID_Automovil_id": 0,
             "Alquileres.ID_Cliente_id": 0
         }
@@ -765,13 +763,13 @@ db.reserva.aggregate([
         $project: {
             "_id": 0,
             "Estado": 0,
-            "ID_Reserva": 0,
+            "ID_reserva": 0,
             "ID_Cliente_id": 0,
             "ID_Automovil_id": 0,
             "Clientes._id": 0,
-            "Clientes.ID_Cliente": 0,
+            "Clientes.ID_cliente": 0,
             "Automoviles._id": 0,
-            "Automoviles.ID_Cliente": 0,
+            "Automoviles.ID_cliente": 0,
             "Automoviles.ID_Automovil_id": 0
 
         }
@@ -780,7 +778,7 @@ db.reserva.aggregate([
 
 //? 5. Obtener los detalles del alquiler con el ID_Alquiler específico. 
 use("db_campus_alquiler");
-db.alquiler.find({ ID_Alquiler: { $eq: 1 } });
+db.alquiler.find({ ID_alquiler: { $eq: 3 } });
 
 //? 6. Listar los empleados con el cargo de "Vendedor"
 use("db_campus_alquiler");
@@ -818,13 +816,13 @@ use("db_campus_alquiler");
 db.alquiler.aggregate([
     {
         $match: {
-            ID_Alquiler: { $eq: ObjectId("64c854fcda0104b3f605ce06") }
+            ID_alquiler: { $eq: 4 }
         }
     },
     {
         $project: {
             "_id": 0,
-            "ID_Alquiler": 0,
+            "ID_alquiler": 0,
             "ID_Automovil_id": 0,
             "ID_Cliente_id": 0,
             "Fecha_Inicio": 0,
@@ -840,12 +838,12 @@ use("db_campus_alquiler");
 db.cliente.aggregate([
     {
         $match: {
-            DNI: { $eq: 10988456554 }
+            DNI: { $eq: 17842438 }
         }
     },
     {
         $project: {
-            "ID_Cliente": 0,
+            "ID_cliente": 0,
             "_id": 0
         }
     }
@@ -865,7 +863,7 @@ db.cliente.aggregate([
     {
         $lookup: {
             from: "reserva",
-            localField: "ID_Cliente",
+            localField: "ID_cliente",
             foreignField: "ID_Cliente_id",
             as: "Reservas"
         }
@@ -875,12 +873,12 @@ db.cliente.aggregate([
     },
     {
         $match: {
-            $and: [{ "Reservas.Estado": { $eq: "Pendiente" } }, { ID_Cliente: { $eq: ObjectId("64c8547b0eae2c9b81d69230") } }]
+            $and: [{ "Reservas.Estado": { $eq: "Pendiente" } }, { ID_cliente: { $eq: 3 } }]
         }
     },
     {
         $group: {
-            _id: "$ID_Cliente",
+            _id: "$ID_cliente",
             Cliente: { $first: "$$ROOT" }, // Usamos $$ROOT para mantener el documento completo del cliente
             Reservas: { $push: "$Reservas" } // Agrupamos las reservas en un arreglo
         }
@@ -889,10 +887,10 @@ db.cliente.aggregate([
         $project: {
             "_id": 0,
             "Cliente._id": 0,
-            "Cliente.ID_Cliente": 0,
+            "Cliente.ID_cliente": 0,
             "Cliente.Reservas": 0,
             "Reservas._id": 0,
-            "Reservas.ID_Reserva": 0,
+            "Reservas.ID_reserva": 0,
             "Reservas.ID_Cliente_id": 0,
             "Reservas.ID_Automovil_id": 0,
         }
@@ -914,7 +912,7 @@ db.cliente.aggregate([
     {
         $lookup: {
             from: "alquiler",
-            localField: "ID_Cliente",
+            localField: "ID_cliente",
             foreignField: "ID_Cliente_id",
             as: "Alquileres",
         }
@@ -929,7 +927,7 @@ db.cliente.aggregate([
     },
     {
         $group: {
-            _id: "$ID_Cliente",
+            _id: "$ID_cliente",
             Cliente: { $first: "$$ROOT" }, // Usamos $$ROOT para mantener el documento completo del cliente
             Alquileres: { $push: "$Alquileres" } // Agrupamos las reservas en un arreglo
         }
@@ -938,10 +936,10 @@ db.cliente.aggregate([
         $project: {
             "_id": 0,
             "Cliente._id": 0,
-            "Cliente.ID_Cliente": 0,
+            "Cliente.ID_cliente": 0,
             "Cliente.Alquileres": 0,
             "Alquileres._id": 0,
-            "Alquileres.ID_Alquiler": 0,
+            "Alquileres.ID_alquiler": 0,
             "Alquileres.ID_Cliente_id": 0,
             "Alquileres.ID_Automovil_id": 0,
         }
@@ -1013,5 +1011,4 @@ db.automovil.find({
 use("db_campus_alquiler");
 db.alquiler.find({
     Fecha_Inicio: { $gte: new Date("2023-07-05T00:00:00.000+00:00"), $lte: new Date("2023-07-10T00:00:00.000+00:00") }
-
 });
