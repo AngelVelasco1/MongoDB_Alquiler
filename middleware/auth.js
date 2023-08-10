@@ -1,4 +1,4 @@
-import { SignJWT,jwtVerify } from "jose";
+import { SignJWT, jwtVerify } from "jose";
 import dotenv from 'dotenv'
 
 //? Env
@@ -28,14 +28,16 @@ export const createToken = async (req, res, next) => {
 }
 
 export const validateToken = async (req, res, next) => {
-    const { authorization } = req.headers;
-
-    if(!authorization) return res.sendStatus(401).send({jwt: "Not token found"});
+    const token = req.headers.authorization;
+    if(!token) return res.sendStatus(401).send({jwt: "Not token found"});
 
     try {
-        const encoder = new TextEncoder()
-
-    } catch (err) {
+        const encoder = new TextEncoder();
+        const jwtData = await jwtVerify(token, encoder.encode(process.env.PRIVATE_KEY));
+        req.jwtData = jwtData;
+        next();
+    } 
+    catch (err) {
         res.status(401).send({
             token: "Unexpected error, create token again"
         })

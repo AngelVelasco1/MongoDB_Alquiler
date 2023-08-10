@@ -8,20 +8,24 @@ dotenv.config('../');
 let db;
 
 //? Atlas connection 
-export const conx = async() => {
+const uri = `mongodb+srv://${process.env.ATLAS_USER}:${process.env.ATLAS_PASSWORD}@cluster0.tfk8jyc.mongodb.net/`;
+export const conx = async () => {
+    let client;
     try {
-        const uri = `mongodb+srv://${process.env.ATLAS_USER}:${process.env.ATLAS_PASSWORD}@cluster0.tfk8jyc.mongodb.net/`;
         const options = {
             useNewUrlParser: true,
             useUnifiedTopology: true
         };
-        const client = await MongoClient.connect(uri, options);
-        db = client.db(process.env.ATLAS_DB);
+        client = new MongoClient(uri, options);
+        await client.connect();
 
-        return db;
+        db = client.db(process.env.ATLAS_DB);
     }
-    catch(err) {
-        return {status: 500, message: err};
+    catch (err) {
+        console.error("Not connection found:", err.message);
+    }
+    finally {
+        await client.close();
     }
 }
 
