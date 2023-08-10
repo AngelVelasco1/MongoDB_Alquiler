@@ -3,33 +3,22 @@ import dotenv from 'dotenv';
 import { MongoClient } from 'mongodb';
 
 //? Env
-dotenv.config('../');
+dotenv.config("../");
 
-let db;
 
 //? Atlas connection 
-const uri = `mongodb+srv://${process.env.ATLAS_USER}:${process.env.ATLAS_PASSWORD}@cluster0.tfk8jyc.mongodb.net/`;
 export const conx = async () => {
-    let client;
     try {
+        const uri = `mongodb+srv://${process.env.ATLAS_USER}:${process.env.ATLAS_PASSWORD}@cluster0.tfk8jyc.mongodb.net/${process.env.ATLAS_DB}`;
         const options = {
             useNewUrlParser: true,
             useUnifiedTopology: true
         };
-        client = new MongoClient(uri, options);
-        await client.connect();
+        const client = await MongoClient.connect(uri, options);
 
-        db = client.db(process.env.ATLAS_DB);
+        return client.db();
     }
     catch (err) {
         console.error("Not connection found:", err.message);
     }
-    finally {
-        await client.close();
-    }
-}
-
-//? Database
-export const getDb = () => {
-    return db;
 }

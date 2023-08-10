@@ -1,7 +1,7 @@
 //? Dependencies 
 import express from 'express';
 import dotenv from 'dotenv';
-import { conx } from './db/atlas.js'
+import { conx } from './db/atlas.js';
 import { createToken, validateToken } from './middleware/auth.js';
 import cookieParser from 'cookie-parser'
 import storageAutomovil from './routes/automovil.js';
@@ -21,7 +21,7 @@ app.get("/create", createToken, (req, res) => {
 dotenv.config();
 
 //? Routes
-app.use('/cliente', storageCliente);
+app.use('/cliente', validateToken, storageCliente);
 app.use('/automovil', validateToken, storageAutomovil);
 
 
@@ -30,13 +30,13 @@ const server = JSON.parse(process.env.SERVER);
 (async () => {
     try {
         await conx();
-        app.listen(server.port, server.hostname, async () => {
+        app.listen(server, () => {
             console.log(`http://${server.hostname}:${server.port}`);
         })
 
     } catch (err) {
         console.error("Server error:", err.message);
     }
-});
+})();
 
 

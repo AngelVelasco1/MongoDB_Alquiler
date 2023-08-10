@@ -2,11 +2,14 @@
 import { limitGrt } from '../middleware/limit.js';
 import { Router } from 'express';
 import { SignJWT } from 'jose';
-import { getDb } from '../db/atlas.js'
+import { conx } from '../db/atlas.js'
 import session from 'express-session';
 
 
 const storageAutomovil = Router();
+
+let db = await conx();
+let automovil = db.collection("automovil")
 
 //? Session (Cookies) */
 storageAutomovil.use(session({
@@ -39,22 +42,25 @@ storageAutomovil.use('/', async(req, res, next) => {
         req.body = payload.body;
         req.session.jwt = jwt; 
 
-        res.cookie('token', jwt);
+        res.cookie('token', jwt, {status: 201});
         next();
     }
     catch(err) {
-        res.sendStatus(500).send(err.message)
+         res.status(401).send({
+            Opps: err.message
+        })
     }
 })
 
 //? Get automoviles
 storageAutomovil.get('/', limitGrt(), async(req, res) => {
-    const db = await getDb();
+    if(!req.rateLimit) return; 
 
-    const collection = db.collection('automovil');
-    let automoviles  = await collection.find().toArray();
+    let db = await conx();
+    let automovil = db.collection("automovil");
+    let result  = await automovil.find({}).toArray();
 
-    res.json(automoviles);
+    res.send.json(result);
 })
 
 export default storageAutomovil;
