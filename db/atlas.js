@@ -1,24 +1,22 @@
 //? Dependencies
-import dotenv from 'dotenv';
-import { MongoClient } from 'mongodb';
+import dotenv from "dotenv";
+import { MongoClient } from "mongodb";
 
 //? Env
 dotenv.config("../");
 
-
-//? Atlas connection 
+//? Atlas connection
 export const conx = async () => {
-    try {
-        const uri = `mongodb+srv://${process.env.ATLAS_USER}:${process.env.ATLAS_PASSWORD}@cluster0.tfk8jyc.mongodb.net/${process.env.ATLAS_DB}`;
-        const options = {
-            useNewUrlParser: true,
-            useUnifiedTopology: true
-        };
-        const client = await MongoClient.connect(uri, options);
-
-        return client.db();
-    }
-    catch (err) {
-        console.error("Not connection found:", err.message);
-    }
-}
+  try {
+    const uri = `mongodb+srv://${process.env.ATLAS_USER}:${process.env.ATLAS_PASSWORD}@cluster0.tfk8jyc.mongodb.net/${process.env.ATLAS_DB}`;
+    const options = {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    };
+    const client = await MongoClient.connect(uri, options);// Conectamos al cliente de mongo usando la uri y las opciones
+    const db = client.db() 
+    return db; // Devolvemos el objeto de base de datos para interactuar con ella
+  } catch (err) {
+    return { status: 500, error: err.message };
+  }
+};
