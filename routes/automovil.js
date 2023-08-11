@@ -2,7 +2,7 @@
 import { limitGrt } from "../middleware/limit.js";
 import { Router } from "express";
 import { SignJWT } from "jose";
-import { conx } from "../db/atlas.js";
+import conx from "../db/atlas.js";
 import session from "express-session";
 
 const storageAutomovil = Router();
@@ -55,11 +55,10 @@ storageAutomovil.use("/", async (req, res, next) => {
 //? Get automoviles
 storageAutomovil.get("/", limitGrt(), async (req, res) => {
   if (!req.rateLimit) return;
-  let db = await conx();
-  let automovil = db.collection("automovil");
-  
-  let automoviles = await automovil.find({}).toArray();
-  res.send.json(automoviles);
+  let db = await conx(); 
+  let automovil = await db.collection("automovil");
+  let automoviles = await automovil.find().toArray();
+  res.send(automoviles);
 });
 
 export default storageAutomovil;

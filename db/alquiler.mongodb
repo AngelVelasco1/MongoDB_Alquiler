@@ -663,7 +663,7 @@ db.empleado.insertMany([
 
 //? Consultas 
 
-//? 1. Mostrar todos los clientes registrados en la base de datos.
+//? 1. Mostrar todos los clientes regisautomovilestrados en la base de datos.
 use("db_campus_alquiler");
 db.cliente.find()
 
