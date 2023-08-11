@@ -19,22 +19,23 @@ app.get("/create", createToken, (req, res) => {
   res.send({ token: req.token });
 });
 
-//? Routes
+//? Routes 
 app.use("/cliente", validateToken, storageCliente);
 app.use("/automovil", validateToken, storageAutomovil);
 
 //? Server
 const server = JSON.parse(process.env.SERVER);
-const start = async () => {
+(async() => {
   try {
     await conx();
     app.listen(server, () => {
       console.log(`http://${server.hostname}:${server.port}`);
     });
     
-  }catch (err) {
+  } catch (err) {
     console.log(err.message)
   }
-}
+})();
 
-start(); 
+
+

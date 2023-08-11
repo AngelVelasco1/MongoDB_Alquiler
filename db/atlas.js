@@ -6,7 +6,7 @@ import { MongoClient } from "mongodb";
 dotenv.config("../");
 
 //? Atlas connection
- const conx = async () => {
+const conx = async () => {
   try {
     const uri = `mongodb+srv://${process.env.ATLAS_USER}:${process.env.ATLAS_PASSWORD}@cluster0.tfk8jyc.mongodb.net/${process.env.ATLAS_DB}`;
     const options = {
@@ -14,7 +14,6 @@ dotenv.config("../");
       useUnifiedTopology: true,
     };
     const client = await MongoClient.connect(uri, options);// Conectamos al cliente de mongo usando la uri y las opciones
-    console.log("db-> connect");
     return client.db() // Devolvemos el objeto de base de datos para interactuar con ella
   } catch (err) {
     console.log(err)
