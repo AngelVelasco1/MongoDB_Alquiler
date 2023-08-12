@@ -2,7 +2,7 @@
 import express from "express";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
-import { createToken, validateToken } from "./middleware/auth.js";
+import { createToken, validateToken } from "./tokens/auth.js";
 import storageAutomovil from "./routes/automovil.js";
 import storageCliente from "./routes/cliente.js";
 import conx from "./db/atlas.js";
@@ -14,9 +14,9 @@ const app = express();
 app.use(express.json());
 app.use(cookieParser());
 
-//? Jwt
-app.get("/create", createToken, (req, res) => {
-  res.send({ token: req.token });
+//? Create Token
+app.use("/create", createToken, (req, res) => {
+  return res.send({ token: req.token });
 });
 
 //? Routes 
