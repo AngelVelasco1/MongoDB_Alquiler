@@ -3,10 +3,10 @@ import dotenv from "dotenv";
 import { MongoClient } from "mongodb";
 
 //? Env
-dotenv.config("../");
+dotenv.config("../.env");
 
 //? Atlas connection
-const conx = async () => {
+export const conx = async () => {
   try {
     const uri = `mongodb+srv://${process.env.ATLAS_USER}:${process.env.ATLAS_PASSWORD}@cluster0.tfk8jyc.mongodb.net/${process.env.ATLAS_DB}`;
     const options = {
@@ -21,4 +21,3 @@ const conx = async () => {
   }
 };
 
-export default conx;

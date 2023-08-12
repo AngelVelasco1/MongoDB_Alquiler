@@ -1,5 +1,5 @@
 //? Dependencies
-import { limitGrt } from '../middleware/limit.js';
+import { limitGrt } from '../limit/rateLimit.js';
 import { Router } from 'express';
 
 const storageCliente = Router();

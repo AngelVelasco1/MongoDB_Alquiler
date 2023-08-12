@@ -1,18 +1,16 @@
 //? Dependencies
 import express from "express";
 import dotenv from "dotenv";
-import cookieParser from "cookie-parser";
 import { createToken, validateToken } from "./tokens/auth.js";
+import conx from "./db/atlas.js";
 import storageAutomovil from "./routes/automovil.js";
 import storageCliente from "./routes/cliente.js";
-import conx from "./db/atlas.js";
 
 //? Env
 dotenv.config();
 
 const app = express();
 app.use(express.json());
-app.use(cookieParser());
 
 //? Create Token
 app.use("/create", createToken, (req, res) => {
@@ -33,7 +31,7 @@ const server = JSON.parse(process.env.SERVER);
     });
     
   } catch (err) {
-    console.log(err.message)
+    console.error({opps: err.message})
   }
 })();
 
