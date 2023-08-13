@@ -20,6 +20,7 @@
     "class-validator": "0.14.0",
     "cookie-parser": "1.4.6",
     "dotenv": "16.3.1",
+    "express-rate-limit": "6.9.0",
     "express-session": "1.17.3",
     "jose": "4.14.4",
     "nodemon": "3.0.1",

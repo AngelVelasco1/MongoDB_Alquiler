@@ -13,13 +13,11 @@ const app = express();
 app.use(express.json());
 
 //? Create Token
-app.use("/create", createToken, (req, res) => {
-  return res.send({ token: req.token });
-});
+app.use("/create", createToken)
 
 //? Routes 
 app.use("/cliente", validateToken, storageCliente);
-app.use("/automovil", validateToken, storageAutomovil);
+app.use("/automovil", validateToken,  storageAutomovil);
 
 //? Server
 const server = JSON.parse(process.env.SERVER);

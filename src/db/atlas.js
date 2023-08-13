@@ -6,7 +6,7 @@ import { MongoClient } from "mongodb";
 dotenv.config("../.env");
 
 //? Atlas connection
-export const conx = async () => {
+const conx = async() => {
   try {
     const uri = `mongodb+srv://${process.env.ATLAS_USER}:${process.env.ATLAS_PASSWORD}@cluster0.tfk8jyc.mongodb.net/${process.env.ATLAS_DB}`;
     const options = {
@@ -21,3 +21,4 @@ export const conx = async () => {
   }
 };
 
+export default conx;

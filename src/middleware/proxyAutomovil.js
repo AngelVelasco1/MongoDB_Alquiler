@@ -8,21 +8,27 @@ import 'reflect-metadata';
 const proxyAutomovil = Router();
 const dtoData = Router();
 
-proxyAutomovil.use(async (req, res, next) => {
-    let { payload } = req.data;
-    const { iat, exp, ...newPayload } = payload;
-    payload = newPayload;
 
-    let Clone = JSON.stringify(classToPlain(plainToClass(Automovil, {}, {ignoreDecorators: true})));
+proxyAutomovil.use((req, res, next) => {
+    try {
+        let {payload} = req.data;
+        const { iat, exp, ...newPayload } = payload;
+        payload = newPayload;
+    
+        let Clone = JSON.stringify(classToPlain(plainToClass(Automovil, {}, {ignoreDecorators: true})));
+    
+        let verifyClone = Clone === JSON.stringify(payload);
+    
+        (!verifyClone) ? res.status(406).send({status: 406, message: "Unauthorizated"}) : next();
+    } catch(err) {
+        res.send({Opps: err.message})
+    }
 
-    let verifyClone = Clone === JSON.stringify(payload);
-
-    (!verifyClone) ? res.status(406).send({status: 406, message: "Unauthorizated"}) : next();
 });
 
 dtoData.use(async (req, res, next) => {
     try {
-        let data = plainToClass(Automovil, req.data);
+        let data = plainToClass(Automovil, req.body);
         await validate(data);
 
         req.body = JSON.parse(JSON.stringify(data));
@@ -31,7 +37,7 @@ dtoData.use(async (req, res, next) => {
         next();
 
     } catch (err) {
-        res.status(err.status).send({Error: err.message})
+        res.status(422).send({Erfgror: err.message})
     }
 })
 
