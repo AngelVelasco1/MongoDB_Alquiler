@@ -11,7 +11,7 @@ Sistema de alquileres de autos. Se realizaron:
 
 
 
-![Diagrama en el que se fundamento la base de datos](./diagrama.png)
+![Diagrama en el que se fundamento la base de datos](./img/diagrama.png)
 
 
 ## Configuración 
@@ -50,6 +50,54 @@ Sistema de alquileres de autos. Se realizaron:
    - Selecciona la consulta que deseas ejecutar, incluyendo el comando `use("db_campus_alquiler");` al inicio del archivo.
 
 Con estos pasos, tendrás todo configurado para ejecutar consultas en MongoDB. Asegúrate de seguir las instrucciones y configurar correctamente la conexión para que puedas interactuar con la base de datos sin problemas.
+
+## Endpoints
+
+> ⚠️ **Importante:**
+> Las consultas deben poseer en su body columnas referentes al endpoint, con valores logicos en cada campo para que la validacion del DTO sea correcta. (Puedes copiar los valores json dados como ejemplo).
+
+### 1. Automovil
+
+### `create Token`
+
+Este endpoint se utiliza para crear un nuevo cliente en la base de datos y generar un JWT para autenticación.
+
+- Método: **POST**
+- URL: `http://localhost:5050/customer/create`
+- Cuerpo de la solicitud
+  ```json
+  {
+    "name": "Angel Doe",
+    "address": "124 Main Street",
+    "email": "angel@example.com"
+  }
+  ```
+> ⚠️ **Importante:**
+> Guarda el token generado, lo necesitaras para ser autenticado en el login y ser autorizado a realizar diferentes acciones (comprar, actualizar, listar, etc)
+
+
+###  `Validate Token`
+
+Realiza el inicio de sesión con JWT. Se espera que el cliente proporcione su nombre y correo electrónico para realizar la autenticación y el token.
+
+- Método: **GET**
+- URL: `http://localhost:5050/customer/login`
+-  Cuerpo de la solicitud
+  ```json
+  {
+    "name": "Angel Doe",
+    "email": "angel@example.com"
+  }
+  ```
+- Agrega un header tipo Authorization con el valor del token generado en el registro.
+
+🔔 **Listo:**
+Ya estas autenticado, podras realizar los siguientes endpoints.
+
+###  `obtain`
+
+### `add`
+
 
 ## Autor
 

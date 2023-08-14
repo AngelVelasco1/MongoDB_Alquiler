@@ -37,7 +37,7 @@ dtoData.use(async (req, res, next) => {
         next();
 
     } catch (err) {
-        res.status(422).send({Erfgror: err.message})
+        res.status(422).send({Error: err.message})
     }
 })
 
