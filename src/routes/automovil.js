@@ -33,4 +33,8 @@ storageAutomovil.post("/add", limitGrt(), proxyAutomovil, dtoData, async (req, r
 
 });
 
+//? Delete automoviles
+
+//? Update automoviles
+
 export default storageAutomovil;
