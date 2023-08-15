@@ -106,8 +106,30 @@ Este endpoint permite añadir autos nuevos a la coleccion
   }
   ```
 ### `delete`
-
+Este endpoint permite eliminar autos existentes en la coleccion
+- Método: **DELETE**
+- URL: `http://localhost:8080/automovil/remove/:id`
+- Ejemplo: `http://localhost:8080/automovil/remove/5`
+> ⚠️ **Ojo:**
+> El ejemplo eliminaria al automovil con id 5, en caso de no encontrarlo notificara este error.
 ### `update`
+Este endpoint permite actualizar informacion autos existentes en la coleccion
+- Método: **PATCH**
+- URL: `http://localhost:8080/automovil/update/:id`
+- Ejemplo: `http://localhost:8080/automovil/update/1`
+- body: 
+  ```json
+  {
+  "car": 10,
+  "brand": "Audi",
+  "model": "A4",
+  "year": 2021,
+  "type": "Automovil",
+  "capacity": 5,
+  "rate": 100000
+  }
+  ```
+
 
 
 ## Autor
