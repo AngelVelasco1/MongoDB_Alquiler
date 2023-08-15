@@ -191,4 +191,17 @@ storageAutomovil.get("/available", limitGrt(), proxyAutomovil, async (req, res) 
   }
 });
 
+//? Mostrar todos los automOviles con una capacidad mayor a 5
+storageAutomovil.get("/greaterCapacity", limitGrt(), proxyAutomovil, async (req, res) => {
+  if(!req.rateLimit) return;
+
+  try {
+    const greaterCapacity = await automovil.find({ Capacidad: { $gt: 5 } }).toArray();
+    res.status(200).send({Automoviles: greaterCapacity});
+
+  } catch(err) {
+    res.status(500).send({Error: err.message})
+  }
+});
+
 export default storageAutomovil;
