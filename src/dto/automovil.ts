@@ -3,12 +3,8 @@ import { IsDefined } from 'class-validator';
 
 export class Automovil {
     // Renombra el campo cuando se serializa (Cuando se convierte a JSON)
-    @Expose({ name: 'car' })
-    // Valida si el campo esta definido, es decir no es undefined.
-    @IsDefined({ message: () => { throw { status: 422, message: 'The car param is required' } } })
-    ID_automovil: number;
-
     @Expose({ name: 'brand' })
+    // Valida si el campo esta definido, es decir no es undefined.
     @IsDefined({ message: () => { throw { status: 422, message: 'The make of car param is required' } } })
     Marca: string;
 
@@ -36,7 +32,6 @@ export class Automovil {
         // Copia los datos proporcionados en el objeto data
         Object.assign(this, data)
         // Asigna Valores por defecto
-        this.ID_automovil = 0;
         this.Marca = "";
         this.Modelo = "";
         this.Anio = 0;

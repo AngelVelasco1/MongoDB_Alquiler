@@ -83,9 +83,9 @@ db.createCollection("automovil", {
     validator: {
         $jsonSchema: {
             bsonType: "object",
-            required: ["ID_automovil", "Marca", "Modelo", "Anio", "Tipo", "Capacidad", "Precio_Diario"],
+            required: ["_id", "Marca", "Modelo", "Anio", "Tipo", "Capacidad", "Precio_Diario"],
             properties: {
-                ID_automovil: {
+                _id: {
                     bsonType: "int",
                     minimum: 0,
                     maximum: 50,
@@ -131,7 +131,6 @@ db.createCollection("automovil", {
 db.automovil.insertMany([
     {
         _id: 1,
-        ID_automovil: 1,
         Marca: "Chevrolet",
         Modelo: "Renault",
         Anio: 2000,
@@ -141,7 +140,7 @@ db.automovil.insertMany([
     },
     {
         _id: 2,
-        ID_automovil: 2,
+       
         Marca: "Mazda",
         Modelo: "Hybrid",
         Anio: 2020,
@@ -151,7 +150,7 @@ db.automovil.insertMany([
     },
     {
         _id: 3,
-        ID_automovil: 3,
+        
         Marca: "Volvo",
         Modelo: "V60",
         Anio: 2022,
@@ -161,7 +160,7 @@ db.automovil.insertMany([
     },
     {
         _id: 4,
-        ID_automovil: 4,
+        
         Marca: "BMW",
         Modelo: "Series 7",
         Anio: 2023,
@@ -171,7 +170,7 @@ db.automovil.insertMany([
     },
     {
         _id: 5,
-        ID_automovil: 5,
+        
         Marca: "Audi",
         Modelo: "A4",
         Anio: 2021,
@@ -663,7 +662,7 @@ db.empleado.insertMany([
 
 //? Consultas 
 
-//? 1. Mostrar todos los clientes regisautomovilestrados en la base de datos.
+//? 1. Mostrar todos los clientes de la base de datos.
 use("db_campus_alquiler");
 db.cliente.find()
 
@@ -673,7 +672,7 @@ db.automovil.aggregate([
     {
         $lookup: {
             from: "alquiler",
-            localField: "ID_automovil",
+            localField: "_id",
             foreignField: "ID_Automovil_id",
             as: "Alquileres",
         }
@@ -803,7 +802,6 @@ db.sucursal.aggregate([
             "_id": 0,
             "Automoviles._id": 0,
             "Automoviles.ID_Sucursal_id": 0,
-            "Automoviles.ID_Automovil": 0,
             "Automoviles.Name": 0,
         }
     }

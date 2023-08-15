@@ -95,8 +95,6 @@ Este endpoint permite añadir autos nuevos a la coleccion
 - body:
   ```json
   {
-  "id": 10,
-  "car": 10,
   "brand": "Audi",
   "model": "A4",
   "year": 2021,
@@ -120,13 +118,12 @@ Este endpoint permite actualizar informacion autos existentes en la coleccion
 - body: 
   ```json
   {
-  "car": 10,
-  "brand": "Audi",
-  "model": "A4",
-  "year": 2021,
+  "brand": "Renault",
+  "model": "20",
+  "year": 2005,
   "type": "Automovil",
-  "capacity": 5,
-  "rate": 100000
+  "capacity": 4,
+  "rate": 1000
   }
   ```
 

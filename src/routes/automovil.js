@@ -4,6 +4,7 @@ import { limitGrt } from "../limit/rateLimit.js";
 import conx from "../db/atlas.js";
 import { proxyAutomovil } from "../middleware/proxyAutomovil.js";
 import { dtoData } from "../middleware/proxyAutomovil.js";
+import { rateLimit } from "express-rate-limit";
 
 const storageAutomovil = Router();
 
@@ -35,21 +36,20 @@ storageAutomovil.post("/add", limitGrt(), proxyAutomovil, dtoData, async (req, r
 );
 
 //? Delete automoviles
-storageAutomovil.delete("/remove/:id?",
-  limitGrt(),
-  proxyAutomovil,
-  async (req, res) => {
+storageAutomovil.delete("/remove/:id?", limitGrt(), proxyAutomovil, async (req, res) => {
     if (!req.rateLimit) return;
 
     try {
-      if (!parseInt(req.params.id)) {
-        res.status(404).send({ Error: "Not Automovil found" });
-      } else {
-        let automovilDeleted = await automovil.deleteOne({ "ID_automovil": parseInt(req.params.id) });
-        res.status(200).send({ Deleted: automovilDeleted })
-      }
+      const automovilID = parseInt(req.params.id);
+      if (isNaN(automovilID)) return res.status(400).send({ Error: "Invalid Automovil id" });
 
-    } catch (err) {
+      const automovilExist = await automovil.findOne({ "_id": automovilID });
+      if(!automovilExist) return res.status(404).send({Error: "Automovil not found"})
+
+      const automovilDeleted = await automovil.deleteOne({"_id": automovilID});
+      res.status(200).send({ Deleted: automovilDeleted })
+    } 
+    catch (err) {
       res.status(422).send({ Error: err.message });
     }
   }
@@ -60,16 +60,63 @@ storageAutomovil.patch("/update/:id?", limitGrt(), proxyAutomovil, dtoData, asyn
   if (!req.rateLimit) return;
 
   try {
-    if (!parseInt(req.params.id)) {
-      res.status(404).send({ Error: "Not Automovil found" });
-    } else {
-      let automovilChanged = await automovil.updateOne({ "ID_automovil": parseInt(req.params.id) }, {$set: req.body});
-      res.status(200).send({ Automovil: automovilChanged })
-    }
+    const automovilID = parseInt(req.params.id);
+    if (isNaN(automovilID)) {
+      res.status(400).send({ Error: "Invalid Automovil id" });
+      return;
+    } 
+
+    const automovilExist = await automovil.findOne({"_id": automovilID})
+    if (!automovilExist) return res.status(404).send({Error: "Automovil not found"})
+
+    if(req.body._id) return res.status(403).send({Error: "Id doesn't update"})
+
+    const automovilChanged = await automovil.updateOne({"_id": automovilID}, {$set: req.body});
+    res.status(200).send({ Automovil: automovilChanged })
+    
   } catch (err) {
     res.status(422).send({ Error: err.message });
 
   }
 });
+
+// ? Obtener automoviles listos para alquiler
+storageAutomovil.get("/available", limitGrt(), proxyAutomovil, async (req, res) => {
+  if(!req.rateLimit) return;
+
+  try {
+    const availableCars = await automovil.aggregate([
+      {
+          $lookup: {
+              from: "alquiler",
+              localField: "_id",
+              foreignField: "ID_Automovil_id",
+              as: "Alquileres",
+          }
+      },
+      {
+          $project: {
+              "ID_automovil_id": 0,
+              "Alquileres.ID_Alquiler": 0,
+              "Alquileres.ID_Automovil_id": 0,
+              "Alquileres.ID_Cliente_id": 0
+          }
+      },
+      {
+          $unwind: "$Alquileres"
+      },
+      {
+          $match: {
+              Alquileres: { $exists: true, $ne: [] }
+          }
+      }
+  
+    ]).toArray();
+    res.status(200).send({Available: availableCars})
+
+  } catch(err) {
+
+  }
+})
 
 export default storageAutomovil;
