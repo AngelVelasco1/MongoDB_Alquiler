@@ -23,12 +23,7 @@ storageAutomovil.get("/", limitGrt(), proxyAutomovil, async (req, res) => {
 });
 
 //? Add automoviles
-storageAutomovil.post(
-  "/add",
-  limitGrt(),
-  proxyAutomovil,
-  dtoData,
-  async (req, res) => {
+storageAutomovil.post("/add", limitGrt(), proxyAutomovil, dtoData, async (req, res) => {
     if (!req.rateLimit) return;
     try {
       let newAutomovil = await automovil.insertOne(req.body);
@@ -47,13 +42,13 @@ storageAutomovil.delete("/remove/:id?",
     if (!req.rateLimit) return;
 
     try {
-      if(!parseInt(req.params.id)) {
-        res.status(404).send({Error: "Not Automovil found"}) ;
+      if (!parseInt(req.params.id)) {
+        res.status(404).send({ Error: "Not Automovil found" });
       } else {
-        let delAutomovil = await automovil.deleteOne({"ID_automovil": parseInt(req.params.id)});
-        res.status(200).send({ Deleted: delAutomovil})
+        let automovilDeleted = await automovil.deleteOne({ "ID_automovil": parseInt(req.params.id) });
+        res.status(200).send({ Deleted: automovilDeleted })
       }
-    
+
     } catch (err) {
       res.status(422).send({ Error: err.message });
     }
@@ -61,7 +56,20 @@ storageAutomovil.delete("/remove/:id?",
 );
 
 //? Update automoviles
-storageAutomovil.patch("/update/:_id?", limitGrt(), proxyAutomovil, (req, res) => {
+storageAutomovil.patch("/update/:id?", limitGrt(), proxyAutomovil, dtoData, async (req, res) => {
+  if (!req.rateLimit) return;
 
-})
+  try {
+    if (!parseInt(req.params.id)) {
+      res.status(404).send({ Error: "Not Automovil found" });
+    } else {
+      let automovilChanged = await automovil.updateOne({ "ID_automovil": parseInt(req.params.id) }, {$set: req.body});
+      res.status(200).send({ Automovil: automovilChanged })
+    }
+  } catch (err) {
+    res.status(422).send({ Error: err.message });
+
+  }
+});
+
 export default storageAutomovil;
