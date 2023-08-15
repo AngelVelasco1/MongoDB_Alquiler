@@ -115,8 +115,80 @@ storageAutomovil.get("/available", limitGrt(), proxyAutomovil, async (req, res) 
     res.status(200).send({Available: availableCars})
 
   } catch(err) {
-
+    res.status(500).send({Error: err.message})
   }
 })
+
+storageAutomovil.get("/available", limitGrt(), proxyAutomovil, async (req, res) => {
+  if(!req.rateLimit) return;
+
+  try {
+    const availableCars = await automovil.aggregate([
+      {
+          $lookup: {
+              from: "alquiler",
+              localField: "_id",
+              foreignField: "ID_Automovil_id",
+              as: "Alquileres",
+          }
+      },
+      {
+          $project: {
+              "ID_automovil_id": 0,
+              "Alquileres.ID_Alquiler": 0,
+              "Alquileres.ID_Automovil_id": 0,
+              "Alquileres.ID_Cliente_id": 0
+          }
+      },
+      {
+          $unwind: "$Alquileres"
+      },
+      {
+          $match: {
+              Alquileres: { $exists: true, $ne: [] }
+          }
+      }
+  
+    ]).toArray();
+    res.status(200).send({Available: availableCars})
+
+  } catch(err) {
+    res.status(500).send({Error: err.message})
+  }
+});
+
+ //? Cantidad total de automoviles de cada sucursal
+ storageAutomovil.get("/total", limitGrt(), proxyAutomovil, async (req, res) => {
+  if(!req.rateLimit) return;
+
+  try {
+    const totalCars = await automovil.aggregate([
+
+      {
+          $lookup: {
+              from: "sucursal_automovil",
+              localField: "_id",
+              foreignField: "ID_Sucursal_id",
+              as: "Sucursal"
+          }
+      },
+      {
+          $unwind: "$Sucursal"
+      },
+      {
+          $project: {
+              "_id": 0,
+              "Sucursal._id": 0,
+              "Sucursal.ID_Automovil_id": 0,
+              "Sucursal.Name": 0,
+          }
+      }
+    ]).toArray();
+    res.status(200).send({Automoviles: totalCars})
+
+  } catch(err) {
+    res.status(500).send({Error: err.message})
+  }
+});
 
 export default storageAutomovil;
