@@ -191,7 +191,7 @@ storageAutomovil.get("/available", limitGrt(), proxyAutomovil, async (req, res) 
   }
 });
 
-//? Mostrar todos los automOviles con una capacidad mayor a 5
+//? Mostrar todos los automoviles con una capacidad mayor a 5
 storageAutomovil.get("/greaterCapacity", limitGrt(), proxyAutomovil, async (req, res) => {
   if(!req.rateLimit) return;
 
@@ -203,5 +203,22 @@ storageAutomovil.get("/greaterCapacity", limitGrt(), proxyAutomovil, async (req,
     res.status(500).send({Error: err.message})
   }
 });
+
+//? Listar todos los automoviles ordenados por marca y modelo
+storageAutomovil.get("/sorted", limitGrt(), proxyAutomovil, async (req, res) => {
+  if(!req.rateLimit) return;
+
+  try {
+    const sorted = await automovil.find().sort(
+      { Marca: 1 },
+      { Modelo: 1 }
+    ).toArray();
+    res.status(200).send({Automoviles: sorted});
+
+  } catch(err) {
+    res.status(500).send({Error: err.message})
+  }
+});
+
 
 export default storageAutomovil;
