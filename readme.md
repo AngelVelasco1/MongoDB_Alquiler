@@ -52,51 +52,62 @@ Sistema de alquileres de autos. Se realizaron:
 Con estos pasos, tendrás todo configurado para ejecutar consultas en MongoDB. Asegúrate de seguir las instrucciones y configurar correctamente la conexión para que puedas interactuar con la base de datos sin problemas.
 
 ## Endpoints
+### `create token`
 
-> ⚠️ **Importante:**
-> Las consultas deben poseer en su body columnas referentes al endpoint, con valores logicos en cada campo para que la validacion del DTO sea correcta. (Puedes copiar los valores json dados como ejemplo).
-
-### 1. Automovil
-
-### `create Token`
-
-Este endpoint se utiliza para crear un nuevo cliente en la base de datos y generar un JWT para autenticación.
-
-- Método: **POST**
-- URL: `http://localhost:5050/customer/create`
-- Cuerpo de la solicitud
-  ```json
-  {
-    "name": "Angel Doe",
-    "address": "124 Main Street",
-    "email": "angel@example.com"
-  }
-  ```
-> ⚠️ **Importante:**
-> Guarda el token generado, lo necesitaras para ser autenticado en el login y ser autorizado a realizar diferentes acciones (comprar, actualizar, listar, etc)
-
-
-###  `Validate Token`
-
-Realiza el inicio de sesión con JWT. Se espera que el cliente proporcione su nombre y correo electrónico para realizar la autenticación y el token.
+Este endpoint se utiliza para un token JWT relacionado a una coleccion especifica por parametro
 
 - Método: **GET**
-- URL: `http://localhost:5050/customer/login`
--  Cuerpo de la solicitud
+- URL: `http://localhost:8080/create/automovil`
+- Resultado esperado:
   ```json
   {
-    "name": "Angel Doe",
-    "email": "angel@example.com"
+  "status": 201,
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjYXIiOjAsImJyYW5kIjoiIiwibW9kZWwiOiIiLCJ5ZWFyIjowLCJ0eXBlIjoiIiw"
   }
   ```
-- Agrega un header tipo Authorization con el valor del token generado en el registro.
+> ⚠️ **Importante:**
+> Guarda el token generado, lo necesitaras para ser autorizado a realizar diferentes acciones (Obtener, eliminar, añadir, actualizar)
+
+
+###  `validate token`
+  
+- Asi debes agregar el token JWT generado como un header de tipo Authorization
+![Header authorization](./img/header.png)
+
 
 🔔 **Listo:**
 Ya estas autenticado, podras realizar los siguientes endpoints.
+> ⚠️ **Importante:**
+> Las consultas de tipo POST deben poseer en su body los campos requeridos de la coleccion definidos y validados en el DTO (Puedes copiar los valores JSON dados.).
+
+## 1. Automovil
 
 ###  `obtain`
+Este endpoint permite obtener todos los automoviles.
+
+- Método: **GET**
+- URL: `http://localhost:8080/automovil`
 
 ### `add`
+Este endpoint permite añadir autos nuevos a la coleccion
+- Método: **GET**
+- URL: `http://localhost:8080/automovil/add`
+- body:
+  ```json
+  {
+  "id": 10,
+  "car": 10,
+  "brand": "Audi",
+  "model": "A4",
+  "year": 2021,
+  "type": "Automovil",
+  "capacity": 5,
+  "rate": 100000
+  }
+  ```
+### `delete`
+
+### `update`
 
 
 ## Autor

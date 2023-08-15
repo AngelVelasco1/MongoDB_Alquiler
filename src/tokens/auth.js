@@ -12,10 +12,6 @@ const createToken = Router();
 const validateToken = Router();
 
 /* Create a Class Instance  based on class name */
-const newInstancee = {
-    automovil: () => new Automovil()
-    
-}
 const newInstance = (className) => {
     // Mapping of ckass names to actual class contructors
     const match = {
