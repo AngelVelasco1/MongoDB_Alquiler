@@ -1,12 +1,13 @@
 import 'reflect-metadata';
 import { SignJWT, jwtVerify } from "jose";
 import { plainToClass, classToPlain } from 'class-transformer';
-import { Automovil } from '../controller/automovil.js'
+import { Automovil } from '../controller/automovil.js';
+import { Cliente } from '../controller/cliente.js'
 import dotenv from 'dotenv'
 import { Router } from 'express';
 
 //? Env
-dotenv.config('../');
+dotenv.config('../../');
 
 const createToken = Router();
 const validateToken = Router();
@@ -15,17 +16,23 @@ const validateToken = Router();
 const newInstance = (className) => {
     // Mapping of ckass names to actual class contructors
     const match = {
-        'automovil': Automovil
+        "automovil": Automovil,
+        "cliente": Cliente
     };
     const Class = match[className]; // Get the class constructor
     // Create instance if valid class name
-    return (Class) ? plainToClass(Class, {}, { ignoreDecorators: true}) : undefined;
+    if (Class) {
+        return {atributes: plainToClass(Class, {}, { ignoreDecorators: true}), class: Class}
+    } else {
+        throw new Error("Invalid collection")
+    }
+
 }
 
 createToken.use('/:collection', async (req, res) => { 
     try {
         const collection = req.params.collection; // Extract the collection name
-        const classInst = newInstance(collection) // Create an instance based on the collection name
+        const classInst = newInstance(collection).atributes // Create an instance based on the collection name
 
         // If class instance not found return an error
         if(!classInst) return res.status(404).send({status: 400, error: "Collection not found"})
@@ -70,4 +77,4 @@ validateToken.use('/', async (req, res, next) => {
     }
 });
 
-export { createToken, validateToken }
+export { createToken, validateToken, newInstance }

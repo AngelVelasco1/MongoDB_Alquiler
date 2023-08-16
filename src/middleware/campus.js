@@ -1,24 +1,29 @@
 //? Dependencies
 import { plainToClass, classToPlain } from 'class-transformer';
-import { Automovil } from '../controller/automovil.js';
+import { newInstance } from '../tokens/auth.js';
 import { Router } from 'express';
 import { validate } from 'class-validator';
+import conx from "../db/atlas.js";
 import 'reflect-metadata';
 
-const proxyAutomovil = Router();
+const classVerify = Router();
 const dtoData = Router();
 
 
-proxyAutomovil.use((req, res, next) => {
+classVerify.use((req, res, next) => {
     try {
+        let collectionName = req.collection;
         let {payload} = req.data;
-        const { iat, exp, ...newPayload } = payload;
+        let { iat, exp, ...newPayload } = payload;
         payload = newPayload;
+
+        let newClass = newInstance(collectionName);
     
-        let Clone = classToPlain(plainToClass(Automovil, {}, {ignoreDecorators: true}));
+        let Clone = JSON.stringify(classToPlain(plainToClass(newClass.class, {}, {ignoreDecorators: true})));
     
-        let verifyClone = JSON.stringify(Clone) === JSON.stringify(payload);
-    
+        let verifyClone = Clone === JSON.stringify(payload);
+
+        delete req.data;
         (!verifyClone) ? res.status(406).send({status: 406, message: "Unauthorizated"}) : next();
     } catch(err) {
         res.send({Opps: err.message})
@@ -28,12 +33,12 @@ proxyAutomovil.use((req, res, next) => {
 
 dtoData.use(async (req, res, next) => {
     try {
-        let data = plainToClass(Automovil, req.body);
+        const collectionName = req.collection;
+        let data = plainToClass(newInstance(collectionName).class, req.body);
         await validate(data);
 
         req.body = JSON.parse(JSON.stringify(data));
         delete req.data;
-
         next();
 
     } catch (err) {
@@ -41,4 +46,4 @@ dtoData.use(async (req, res, next) => {
     }
 })
 
-export { proxyAutomovil, dtoData }
+export { classVerify, dtoData }

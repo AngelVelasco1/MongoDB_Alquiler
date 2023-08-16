@@ -286,14 +286,9 @@ db.createCollection("cliente", {
     validator: {
         $jsonSchema: {
             bsonType: "object",
-            required: ["ID_cliente", "Nombre", "Apellido", "DNI", "Direccion", "Telefono", "Email"],
+            required: ["Nombre", "Apellido", "DNI", "Direccion", "Telefono", "Email"],
             properties: {
-                ID_cliente: {
-                    bsonType: "int",
-                    minimum: 0,
-                    maximum: 100,
-                    description: "Id del cliente. Debe ser un numero en rango de 0 a 100"
-                },
+
                 Nombre: {
                     bsonType: "string",
                     pattern: "^[A-Za-z\\s]+$",
@@ -664,7 +659,7 @@ db.empleado.insertMany([
 
 //? 1. Mostrar todos los clientes de la base de datos.
 use("db_campus_alquiler");
-db.cliente.find()
+db.cliente.find({})
 
 //? 2. Obtener todos los automóviles disponibles para alquiler.
 use("db_campus_alquiler");
@@ -836,7 +831,7 @@ use("db_campus_alquiler");
 db.cliente.aggregate([
     {
         $match: {
-            DNI: { $eq: 17842438 }
+            DNI: { $eq: "17842438" }
         }
     },
     {

@@ -2,9 +2,8 @@
 import { Router } from "express";
 import { limitGrt } from "../limit/rateLimit.js";
 import conx from "../db/atlas.js";
-import { proxyAutomovil } from "../middleware/proxyAutomovil.js";
-import { dtoData } from "../middleware/proxyAutomovil.js";
-import { rateLimit } from "express-rate-limit";
+import { classVerify } from "../middleware/campus.js";
+import { dtoData } from "../middleware/campus.js";
 
 const storageAutomovil = Router();
 
@@ -13,7 +12,7 @@ let db = await conx();
 let automovil = db.collection("automovil");
 
 //? Get automoviles
-storageAutomovil.get("/", limitGrt(), proxyAutomovil, async (req, res) => {
+storageAutomovil.get("/", limitGrt(), classVerify, async (req, res) => {
   if (!req.rateLimit) return;
   try {
     let automoviles = await automovil.find({}).toArray();
@@ -24,7 +23,7 @@ storageAutomovil.get("/", limitGrt(), proxyAutomovil, async (req, res) => {
 });
 
 //? Add automoviles
-storageAutomovil.post("/add", limitGrt(), proxyAutomovil, dtoData, async (req, res) => {
+storageAutomovil.post("/add", limitGrt(), classVerify, dtoData, async (req, res) => {
     if (!req.rateLimit) return;
     try {
       let newAutomovil = await automovil.insertOne(req.body);
@@ -36,7 +35,7 @@ storageAutomovil.post("/add", limitGrt(), proxyAutomovil, dtoData, async (req, r
 );
 
 //? Delete automoviles
-storageAutomovil.delete("/remove/:id?", limitGrt(), proxyAutomovil, async (req, res) => {
+storageAutomovil.delete("/remove/:id?", limitGrt(), classVerify, async (req, res) => {
     if (!req.rateLimit) return;
 
     try {
@@ -56,7 +55,7 @@ storageAutomovil.delete("/remove/:id?", limitGrt(), proxyAutomovil, async (req, 
 );
 
 //? Update automoviles
-storageAutomovil.patch("/update/:id?", limitGrt(), proxyAutomovil, dtoData, async (req, res) => {
+storageAutomovil.patch("/update/:id?", limitGrt(), classVerify, dtoData, async (req, res) => {
   if (!req.rateLimit) return;
 
   try {
@@ -81,7 +80,7 @@ storageAutomovil.patch("/update/:id?", limitGrt(), proxyAutomovil, dtoData, asyn
 });
 
 // ? Obtener automoviles listos para alquiler
-storageAutomovil.get("/available", limitGrt(), proxyAutomovil, async (req, res) => {
+storageAutomovil.get("/available", limitGrt(), classVerify, async (req, res) => {
   if(!req.rateLimit) return;
 
   try {
@@ -119,7 +118,7 @@ storageAutomovil.get("/available", limitGrt(), proxyAutomovil, async (req, res) 
   }
 });
 
-storageAutomovil.get("/available", limitGrt(), proxyAutomovil, async (req, res) => {
+storageAutomovil.get("/available", limitGrt(), classVerify, async (req, res) => {
   if(!req.rateLimit) return;
 
   try {
@@ -158,7 +157,7 @@ storageAutomovil.get("/available", limitGrt(), proxyAutomovil, async (req, res) 
 });
 
  //? Cantidad total de automoviles de cada sucursal
- storageAutomovil.get("/total", limitGrt(), proxyAutomovil, async (req, res) => {
+ storageAutomovil.get("/total", limitGrt(), classVerify, async (req, res) => {
   if(!req.rateLimit) return;
 
   try {
@@ -192,7 +191,7 @@ storageAutomovil.get("/available", limitGrt(), proxyAutomovil, async (req, res) 
 });
 
 //? Mostrar todos los automoviles con una capacidad mayor a 5
-storageAutomovil.get("/greaterCapacity", limitGrt(), proxyAutomovil, async (req, res) => {
+storageAutomovil.get("/greaterCapacity", limitGrt(), classVerify, async (req, res) => {
   if(!req.rateLimit) return;
 
   try {
@@ -205,7 +204,7 @@ storageAutomovil.get("/greaterCapacity", limitGrt(), proxyAutomovil, async (req,
 });
 
 //? Listar todos los automoviles ordenados por marca y modelo
-storageAutomovil.get("/sorted", limitGrt(), proxyAutomovil, async (req, res) => {
+storageAutomovil.get("/sorted", limitGrt(), classVerify, async (req, res) => {
   if(!req.rateLimit) return;
 
   try {

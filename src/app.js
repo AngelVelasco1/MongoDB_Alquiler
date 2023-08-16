@@ -12,6 +12,14 @@ dotenv.config();
 const app = express();
 app.use(express.json());
 
+// ? req Collection available
+app.use("/:collection", (req, res, next) => {
+  const collectionName = req.params.collection;
+  req.collection = collectionName
+  next();
+})
+
+
 //? Create Token
 app.use("/create", createToken)
 
