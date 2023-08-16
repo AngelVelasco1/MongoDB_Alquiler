@@ -15,9 +15,9 @@ proxyAutomovil.use((req, res, next) => {
         const { iat, exp, ...newPayload } = payload;
         payload = newPayload;
     
-        let Clone = JSON.stringify(classToPlain(plainToClass(Automovil, {}, {ignoreDecorators: true})));
+        let Clone = classToPlain(plainToClass(Automovil, {}, {ignoreDecorators: true}));
     
-        let verifyClone = Clone === JSON.stringify(payload);
+        let verifyClone = JSON.stringify(Clone) === JSON.stringify(payload);
     
         (!verifyClone) ? res.status(406).send({status: 406, message: "Unauthorizated"}) : next();
     } catch(err) {

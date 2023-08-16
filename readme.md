@@ -2,12 +2,14 @@
 
 ## Descripcion
 
-Sistema de alquileres de autos. Se realizaron: 
-- Referencias
-- 20 Consultas interactivas
-- Sistemas de agrupacion
-- Insercion de datos
-- Y mas
+Sistema de alquileres de autos. Se usaron temas de: 
+- Agregaciones
+- Consultas interactivas
+- Autenticacion JWT
+- Esquemas (DTO mongo)
+- Limite de solicitudes
+- DTO Backend
+- Middlewares de verificacion 
 
 
 
@@ -127,8 +129,10 @@ Este endpoint permite actualizar informacion autos existentes en la coleccion
   }
   ```
 
-
-
+### `Mostrar automoviles con capacidad mayor a 5`
+Este endpoint permite obtener todos los automiles que contengas una capacidad mayor a 5
+- Método: **GET**
+- URL: `http://localhost:8080/automovil/greaterCapacity`
 ## Autor
 
 **Angel David Velasco**

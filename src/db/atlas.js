@@ -12,6 +12,7 @@ const conx = async() => {
     const options = {
       useNewUrlParser: true,
       useUnifiedTopology: true,
+      retryWrites: true // Habilitar Retryable Writes
     };
     const client = await MongoClient.connect(uri, options);// Conectamos al cliente de mongo usando la uri y las opciones
     return client.db() // Devolvemos el objeto de base de datos para interactuar con ella

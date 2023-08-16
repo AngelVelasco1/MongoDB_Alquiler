@@ -117,7 +117,7 @@ storageAutomovil.get("/available", limitGrt(), proxyAutomovil, async (req, res) 
   } catch(err) {
     res.status(500).send({Error: err.message})
   }
-})
+});
 
 storageAutomovil.get("/available", limitGrt(), proxyAutomovil, async (req, res) => {
   if(!req.rateLimit) return;
