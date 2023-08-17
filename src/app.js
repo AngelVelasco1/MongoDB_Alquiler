@@ -5,6 +5,7 @@ import { createToken, validateToken } from "./tokens/auth.js";
 import conx from "./db/atlas.js";
 import storageAutomovil from "./routes/automovil.js";
 import storageCliente from "./routes/cliente.js";
+import storageAlquiler from "./routes/alquiler.js";
 
 //? Env
 dotenv.config();
@@ -25,7 +26,9 @@ app.use("/create", createToken)
 
 //? Routes 
 app.use("/cliente", validateToken, storageCliente);
-app.use("/automovil", validateToken,  storageAutomovil);
+app.use("/automovil", validateToken, storageAutomovil);
+app.use("/alquiler", validateToken, storageAlquiler);
+
 
 //? Server
 const server = JSON.parse(process.env.SERVER);

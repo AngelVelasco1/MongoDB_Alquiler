@@ -2,7 +2,8 @@ import 'reflect-metadata';
 import { SignJWT, jwtVerify } from "jose";
 import { plainToClass, classToPlain } from 'class-transformer';
 import { Automovil } from '../controller/automovil.js';
-import { Cliente } from '../controller/cliente.js'
+import { Cliente } from '../controller/cliente.js';
+import { Alquiler } from '../controller/alquiler.js'
 import dotenv from 'dotenv'
 import { Router } from 'express';
 
@@ -17,7 +18,8 @@ const newInstance = (className) => {
     // Mapping of ckass names to actual class contructors
     const match = {
         "automovil": Automovil,
-        "cliente": Cliente
+        "cliente": Cliente,
+        "alquiler": Alquiler
     };
     const Class = match[className]; // Get the class constructor
     // Create instance if valid class name

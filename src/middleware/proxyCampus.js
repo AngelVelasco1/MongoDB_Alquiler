@@ -3,12 +3,10 @@ import { plainToClass, classToPlain } from 'class-transformer';
 import { newInstance } from '../tokens/auth.js';
 import { Router } from 'express';
 import { validate } from 'class-validator';
-import conx from "../db/atlas.js";
 import 'reflect-metadata';
 
 const classVerify = Router();
 const dtoData = Router();
-
 
 classVerify.use((req, res, next) => {
     try {
