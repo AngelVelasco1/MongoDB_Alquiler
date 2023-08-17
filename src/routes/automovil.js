@@ -2,8 +2,8 @@
 import { Router } from "express";
 import { limitGrt } from "../limit/rateLimit.js";
 import conx from "../db/atlas.js";
-import { classVerify } from "../middleware/campus.js";
-import { dtoData } from "../middleware/campus.js";
+import { classVerify } from "../middleware/proxyCampus.js";
+import { dtoData } from "../middleware/proxyCampus.js";
 
 const storageAutomovil = Router();
 

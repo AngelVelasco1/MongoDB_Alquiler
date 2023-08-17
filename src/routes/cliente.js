@@ -2,7 +2,7 @@
 import conx from "../db/atlas.js";
 import { limitGrt } from '../limit/rateLimit.js';
 import { Router } from 'express';
-import { classVerify } from "../middleware/campus.js";
+import { classVerify } from "../middleware/proxyCampus.js";
 
 const storageCliente = Router();
 
