@@ -11,7 +11,7 @@ let db = await conx();
 let alquiler = db.collection("alquiler");
 
 //?  Obtener los detalles del alquiler con el ID_Alquiler específico. 
-storageAlquiler.get('/:ID_alquiler', limitGrt(), classVerify, async (req, res) => {
+storageAlquiler.get('/specific/:ID_alquiler', limitGrt(), classVerify, async (req, res) => {
     const alquilerID = parseInt(req.params.ID_alquiler);
     const specificAlquiler = await alquiler.findOne(
         { "ID_alquiler": alquilerID }
@@ -21,7 +21,7 @@ storageAlquiler.get('/:ID_alquiler', limitGrt(), classVerify, async (req, res) =
 });
 
 //? 8. Obtener el costo total de un alquiler específico. 
-storageAlquiler.get('/total/:ID_alquiler', limitGrt(), classVerify, async (req, res) => {
+storageAlquiler.get('/totalPrice/:ID_alquiler', limitGrt(), classVerify, async (req, res) => {
     const alquilerID = parseInt(req.params.ID_alquiler);
     const totalAlquiler = await alquiler.aggregate([
         {
@@ -51,6 +51,12 @@ storageAlquiler.get('/specificDate/:Fecha_Inicio', limitGrt(), classVerify, asyn
     const startAlquiler = await alquiler.findOne({ "Fecha_Inicio": startDate })
 
     res.status(200).send({Alquiler: startAlquiler})
+});
+
+storageAlquiler.get('/total', limitGrt(), classVerify, async (req, res) => {
+    const totalAlquiler = await alquiler.countDocuments({});
+
+    res.status(200).send({Alquileres: totalAlquiler})
 });
 
 
