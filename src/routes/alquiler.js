@@ -46,4 +46,12 @@ storageAlquiler.get('/total/:ID_alquiler', limitGrt(), classVerify, async (req, 
     res.status(200).send(totalAlquiler)
 });
 
+storageAlquiler.get('/specificDate/:Fecha_Inicio', limitGrt(), classVerify, async (req, res) => {
+    const startDate = new Date(req.params.Fecha_Inicio);
+    const startAlquiler = await alquiler.findOne({ "Fecha_Inicio": startDate })
+
+    res.status(200).send({Alquiler: startAlquiler})
+});
+
+
 export default storageAlquiler;
