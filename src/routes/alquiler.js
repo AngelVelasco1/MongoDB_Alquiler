@@ -50,13 +50,22 @@ storageAlquiler.get('/specificDate/:Fecha_Inicio', limitGrt(), classVerify, asyn
     const startDate = new Date(req.params.Fecha_Inicio);
     const startAlquiler = await alquiler.findOne({ "Fecha_Inicio": startDate })
 
-    res.status(200).send({Alquiler: startAlquiler})
+    res.status(200).send({ Alquiler: startAlquiler })
 });
 
 storageAlquiler.get('/total', limitGrt(), classVerify, async (req, res) => {
     const totalAlquiler = await alquiler.countDocuments({});
 
-    res.status(200).send({Alquileres: totalAlquiler})
+    res.status(200).send({ Alquileres: totalAlquiler })
+});
+
+
+storageAlquiler.get('/between', limitGrt(), classVerify, async (req, res) => {
+    const alquileres = await alquiler.find({
+        Fecha_Inicio: { $gte: new Date("2023-07-05T00:00:00.000+00:00"), $lte: new Date("2023-07-10T00:00:00.000+00:00") }
+    }).toArray();
+
+    res.status(200).send({ Alquileres: alquileres })
 });
 
 
