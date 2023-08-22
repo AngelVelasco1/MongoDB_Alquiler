@@ -1,12 +1,14 @@
 //? Dependencies
 import { plainToClass, classToPlain } from 'class-transformer';
 import { newInstance } from '../tokens/auth.js';
+import { Params } from '../controller/params.js';
 import { Router } from 'express';
 import { validate } from 'class-validator';
 import 'reflect-metadata';
 
 const classVerify = Router();
 const dtoData = Router();
+const dtoParams = Router();
 
 classVerify.use((req, res, next) => {
     try {
@@ -44,4 +46,16 @@ dtoData.use(async (req, res, next) => {
     }
 })
 
-export { classVerify, dtoData }
+
+dtoParams.use(async (req, res, next) => {
+    try {
+        let param = plainToClass(Params, req.params)
+        await validate(param);
+        next();
+
+    } catch (err) {
+        res.status(422).send({Error: err.message})
+    }
+})
+
+export { classVerify, dtoData, dtoParams }
