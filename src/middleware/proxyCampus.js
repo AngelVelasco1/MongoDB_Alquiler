@@ -47,7 +47,7 @@ dtoData.use(async (req, res, next) => {
 })
 
 
-dtoParams.use(async (req, res, next) => {
+dtoParams.use("/:id", async (req, res, next) => {
     try {
         let param = plainToClass(Params, req.params)
         await validate(param);

@@ -1,18 +1,14 @@
 import { Expose, Transform } from "class-transformer";
 import { IsInt } from "class-validator";
-
-export class Params {
+export class Params{
     @IsInt()
     @Expose({name: "id"})
-    @Transform(({value}) => {
+    @Transform(({value})=>{
         if(/^[0-9]+$/.test(value)) 
-            return (value); else throw { status: 406, message: 'El ID contiene parametros incorrectos'};
-    }, {toClassOnly: true})
-    id: number
-
-    constructor(data: Partial<Params>) {
+        return (value); else throw {status:400, message: "el dato del parámetro id ingresado es incorrecto, ingresa un número entero"}}, {toClassOnly: true})
+    id: number;
+    constructor(data: Partial<Params>){
         Object.assign(this, data);
-        this.id = 1
+        this.id = 1;
     }
-
 }

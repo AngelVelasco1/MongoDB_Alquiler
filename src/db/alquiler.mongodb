@@ -1033,3 +1033,31 @@ use("db_campus_alquiler");
 db.alquiler.find({
     Fecha_Inicio: { $gte: new Date("2023-07-05T00:00:00.000+00:00"), $lte: new Date("2023-07-10T00:00:00.000+00:00") }
 });
+
+use("db_campus_alquiler");
+db.ventas.insertOne(
+    {
+        _id: 1,
+        name: "Smartphone",
+        cantidad: 10,
+        precio_unitario: 500,
+        fecha: new Date("2023-08-10T00:00:00Z")
+     }
+)
+use("db_campus_alquiler");
+
+db.ventas.aggregate([
+    {
+      $project: {
+        _id: 0, // Excluimos el campo usando 0
+        name: 1, // Incluimos el campo usando 1
+        totalVentas: { $multiply: 
+            [
+                "$cantidad",
+                "$precio_unitario"
+            ] 
+        },
+        age: { $year: "$fecha" }  
+      }
+    }
+  ])
