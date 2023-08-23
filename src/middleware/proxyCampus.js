@@ -8,7 +8,6 @@ import 'reflect-metadata';
 
 const classVerify = Router();
 const dtoData = Router();
-const dtoParams = Router();
 
 classVerify.use((req, res, next) => {
     try {
@@ -47,15 +46,15 @@ dtoData.use(async (req, res, next) => {
 })
 
 
-dtoParams.use("/:id", async (req, res, next) => {
+const dtoParams = async (req, res, next) => {
     try {
-        let param = plainToClass(Params, req.params)
+        let param = plainToClass(Params, req.params, {excludeExtraneousValues: true})
         await validate(param);
+        console.log(param)
         next();
 
     } catch (err) {
-        res.status(422).send({Error: err.message})
+        res.status(422).send({status: 422, message: err.message})
     }
-})
-
+}
 export { classVerify, dtoData, dtoParams }

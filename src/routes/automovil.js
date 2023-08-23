@@ -20,7 +20,7 @@ storageAutomovil.get("/", limitGrt(), classVerify, async (req, res) => {
     let automoviles = await automovil.find({}).toArray();
     res.send(automoviles);
   } catch (err) {
-    res.status(422).send({ Error: err.message });
+    res.status(422).send({ Error: err });
   }
 });
 
@@ -62,10 +62,7 @@ storageAutomovil.patch("/update/:id?", limitGrt(), classVerify, dtoData, dtoPara
 
   try {
     const automovilID = parseInt(req.params.id);
-    if (isNaN(automovilID)) {
-      res.status(400).send({ Error: "Invalid Automovil id" });
-      return;
-    }
+
 
     const automovilExist = await automovil.findOne({ "_id": automovilID })
     if (!automovilExist) return res.status(404).send({ Error: "Automovil not found" })
@@ -76,7 +73,7 @@ storageAutomovil.patch("/update/:id?", limitGrt(), classVerify, dtoData, dtoPara
     res.status(200).send({ Automovil: automovilChanged })
 
   } catch (err) {
-    res.status(422).send({ Error: err.message });
+    res.sendStatus(500);
 
   }
 });
