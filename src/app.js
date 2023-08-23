@@ -13,7 +13,7 @@ dotenv.config();
 const app = express();
 app.use(express.json());
 
-// ? req Collection available
+// ? Collection available
 app.use("/:collection", (req, res, next) => {
   const collectionName = req.params.collection;
   req.collection = collectionName
